@@ -15,6 +15,18 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
+java {
+    sourceSets {
+        main {
+            java.setSrcDirs(listOf("src/main"))
+            resources.setSrcDirs(listOf("src/resources"))
+        }
+        test {
+            java.setSrcDirs(listOf("src/test"))
+        }
+    }
+}
+
 tasks.compileJava {
     options.release.set(11)
 }
