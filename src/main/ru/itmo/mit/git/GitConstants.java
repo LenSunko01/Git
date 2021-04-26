@@ -19,4 +19,16 @@ public final class GitConstants {
     public static final @NotNull String MERGE = "merge";
 
     public static final @NotNull String MASTER = "master";
+
+    public final static String gitPrimeFolderName = "gitImpl";
+    public final static String gitObjectsFolderName = "objects";
+    public final static String gitRefsFolderName = "refs";
+    public final static String gitHeadFileName = "HEAD";
+    public final static String gitHeadsFolderName = "heads";
+    public final static String gitBlobsFolderName = "blobs";
+    public final static String gitTreesFolderName = "trees";
+    public final static String gitCommitsFolderName = "commits";
+    public final static String gitIndexFileName = "index";
+
+    public final static String EMPTY = "";
 }
