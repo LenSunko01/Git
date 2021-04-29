@@ -23,6 +23,7 @@ public class GitPathService {
     private final static GitPathService instance = new GitPathService();
 
     private GitPathService() {
+        pathToGitRepository = Paths.get("/home/mario/correct unix"); //Paths.get(System.getProperty("user.dir"));
         initialize();
     }
 
@@ -31,7 +32,6 @@ public class GitPathService {
     }
 
     private void initialize() {
-        pathToGitRepository = Paths.get("/home/mario/correct unix"); //Paths.get(System.getProperty("user.dir"));
         pathToGitFolder = getFullPath(gitPrimeFolderName);
         pathToObjectsFolder = Paths.get(pathToGitFolder + File.separator + gitObjectsFolderName);
         pathToBlobsFolder = Paths.get(pathToObjectsFolder + File.separator + gitBlobsFolderName);
@@ -41,6 +41,11 @@ public class GitPathService {
                 File.separator + gitHeadsFolderName);
         pathToHeadFile = Paths.get(pathToGitFolder + File.separator + gitHeadFileName);
         pathToIndexFile = Paths.get(pathToGitFolder + File.separator + gitIndexFileName);
+    }
+
+    public void setPathToGitRepository(String path) {
+        pathToGitRepository = Paths.get(path);
+        initialize();
     }
 
     public Path getPathToHeadsFolder() {
@@ -89,6 +94,19 @@ public class GitPathService {
     }
 
     public Path getFullPath(String path) {
-        return Paths.get(pathToGitRepository.toString() + File.separator + path.toString());
+        return Paths.get(pathToGitRepository.toString() + File.separator + path);
+    }
+
+    public Path getPathToBlobBySha(String sha) {
+        return Paths.get(pathToBlobsFolder + File.separator + sha.substring(0, 2)
+                + File.separator + sha);
+    }
+
+    public Path getRelativePath(Path path) {
+        return pathToGitRepository.relativize(path);
+    }
+
+    public boolean fileBelongsToGitFolder(Path path) {
+        return path.startsWith(pathToGitFolder);
     }
 }

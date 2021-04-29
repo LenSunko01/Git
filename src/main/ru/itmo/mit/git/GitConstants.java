@@ -31,4 +31,6 @@ public final class GitConstants {
     public final static String gitIndexFileName = "index";
 
     public final static String EMPTY = "";
+    public final static String revisionHeadPrefix = "HEAD~";
+    public final static String dateFormat = "dd-MM-yyyy HH:mm:ss";
 }

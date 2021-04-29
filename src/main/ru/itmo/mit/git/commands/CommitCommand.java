@@ -8,7 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class CommitCommand implements Command {
-    private String message = "";
+    private String message;
     private GitFileUtils fileUtils = GitFileUtils.getInstance();
     private GitPathService pathService = GitPathService.getInstance();
     private GitObjectManager objectManager = GitObjectManager.getInstance();
@@ -19,36 +19,29 @@ public class CommitCommand implements Command {
     }
 
     private String getCommitParentSha() throws GitException {
-        var headPath = fileUtils.readFromFile(pathService.getPathToHeadFile());
-        return fileUtils.readFromFile(Paths.get(headPath));
-    }
-
-    private String getCommitContent(Commit commit) {
-        var result = new StringBuilder();
-        result.append("tree ").append(commit.getTreeSha()).append(" ");
-        if (!(commit.getParentCommitSha().equals(GitConstants.EMPTY))) {
-            result.append(commit.getParentCommitSha()).append(" ");
-        }
-        result.append(commit.getDate()).append(" ").append(commit.getMessage());
-        return result.toString();
+        return objectManager.getHeadCommitSha();
     }
 
     private void changeCurrentBranchCommit(String newCommitSha) throws GitException {
-        var headPath = fileUtils.readFromFile(pathService.getPathToHeadFile());
-        fileUtils.writeToFile(Paths.get(headPath), newCommitSha);
+        if (objectManager.isDetachedHead()) {
+            fileUtils.writeDetachedToHeadFile(newCommitSha);
+            return;
+        }
+        var branchName = objectManager.getHeadBranch();
+        fileUtils.writeToFile(Paths.get(branchName), newCommitSha);
     }
 
     @Override
     public void execute() throws GitException {
         Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat(GitConstants.dateFormat);
         var commit = new Commit(formatter.format(date));
         commit.setMessage(message);
 
         commit.setParent(getCommitParentSha());
         var gitIndex = GitIndex.getInstance();
         commit.setTreeSha(gitIndex.getRoot().getSha());
-        commit.setContent(getCommitContent(commit));
+        commit.calculateCommitContent();
         changeCurrentBranchCommit(commit.getSha());
         objectManager.saveCommitFile(commit);
         writer.formattedOutput("New commit " + commit.getSha() + " at " + commit.getDate());

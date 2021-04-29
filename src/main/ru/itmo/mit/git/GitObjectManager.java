@@ -1,5 +1,6 @@
 package ru.itmo.mit.git;
 
+import org.apache.commons.codec.binary.StringUtils;
 import ru.itmo.mit.git.objects.Blob;
 import ru.itmo.mit.git.objects.Commit;
 import ru.itmo.mit.git.objects.Tree;
@@ -21,6 +22,70 @@ public class GitObjectManager {
         return instance;
     }
     private final GitPathService pathService = GitPathService.getInstance();
+
+    /*tree sha parentCommitSha date message*/
+    public Commit getCommitBySha(String sha) throws GitException {
+        var commitContent = getCommitContentBySha(sha);
+        var splitted = Arrays.asList(commitContent.split(" "));
+        var treeSha = splitted.get(1);
+        var parentCommitSha = "";
+        var date = "";
+        var message = "";
+        if (GitConstants.dateFormat.length() < splitted.get(2).length()) {
+            parentCommitSha = splitted.get(2);
+            date = splitted.get(3) + " " + splitted.get(4);
+            if (splitted.size() > 5) {
+                message = String.join(" ", splitted.subList(5, splitted.size()));
+            }
+        } else {
+            date = splitted.get(2) + " " + splitted.get(3);
+            if (splitted.size() > 4) {
+                message = String.join(" ", splitted.subList(4, splitted.size()));
+            }
+        }
+        return new Commit(date, treeSha, parentCommitSha, message);
+    }
+
+    public String getCommitContentBySha(String sha) throws GitException {
+        return fileUtils.readFromFile(Paths.get(pathService.getPathToCommitsFolder() + File.separator +
+                sha.substring(0,2) + File.separator + sha));
+    }
+
+    public boolean isDetachedHead() throws GitException {
+        var headContent = fileUtils.readFromFile(pathService.getPathToHeadFile());
+        return !headContent.startsWith("branch ");
+    }
+
+    public String getHeadBranch() throws GitException {
+        var headContent = fileUtils.readFromFile(pathService.getPathToHeadFile());
+        if (headContent.startsWith("branch ")) {
+            return headContent.substring("branch ".length());
+        }
+        throw new GitException("No branch in detached HEAD state");
+    }
+
+    public String getHeadCommitSha() throws GitException {
+        var headContent = fileUtils.readFromFile(pathService.getPathToHeadFile());
+        if (headContent.startsWith("branch ")) {
+            var path = headContent.substring("branch ".length());
+            return fileUtils.readFromFile(Paths.get(path));
+        }
+        return headContent.substring("detached ".length());
+    }
+
+    public String getHeadCommitTreeSha() throws GitException {
+        var headCommitSha = getHeadCommitSha();
+        if (headCommitSha.isEmpty()) {
+            return null;
+        }
+        var commitContent = fileUtils.readFromFile(Paths.get(pathService.getPathToCommitsFolder() + File.separator +
+                        headCommitSha.substring(0,2) + File.separator + headCommitSha));
+        if (commitContent.isEmpty()) {
+            return null;
+        }
+        return Arrays.asList(commitContent.split(" ")).get(1);
+    }
+
     private void parseTreeLine(String line, Tree root) {
         var splitted = Arrays.asList(line.split(" "));
         var sha = splitted.get(1);
@@ -68,7 +133,11 @@ public class GitObjectManager {
     public Blob createBlobFromFile(File file) throws GitException {
         String fileContent;
         fileContent = fileUtils.readFromFile(file.toPath());
-        var blob = new Blob(file.getName(), fileContent);
+        return new Blob(file.getName(), fileContent);
+    }
+
+    public Blob createAndSaveBlobFromFile(File file) throws GitException {
+        var blob = createBlobFromFile(file);
         saveBlobFile(blob);
         return blob;
     }

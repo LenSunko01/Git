@@ -17,6 +17,10 @@ public class GitFileUtils {
     }
     private GitFileUtils() {}
 
+    public void writeBranchToHeadFile(String branch) throws GitException {
+        writeToFile(pathService.getPathToHeadFile(), "branch " + branch);
+    }
+
     public void writeToFile(Path path, String statement) throws GitException {
         try (FileWriter writer = new FileWriter(path.toString())) {
             writer.write(statement);
@@ -31,5 +35,9 @@ public class GitFileUtils {
         } catch (IOException e) {
             throw new GitException("Exception while reading from file", e);
         }
+    }
+
+    public void writeDetachedToHeadFile(String newCommitSha) throws GitException {
+        writeToFile(pathService.getPathToHeadFile(), "detached " + newCommitSha);
     }
 }

@@ -29,7 +29,7 @@ public class InitCommand implements Command {
             var pathToMasterBranch = pathService.getPathToHeadsFolder() + File.separator + GitConstants.MASTER;
             Files.createFile(Paths.get(pathToMasterBranch));
             Files.createFile(pathService.getPathToHeadFile());
-            fileUtils.writeToFile(pathService.getPathToHeadFile(), pathToMasterBranch);
+            fileUtils.writeBranchToHeadFile(pathToMasterBranch);
             Files.createFile(pathService.getPathToIndexFile());
 
             var indexTree = new Tree();

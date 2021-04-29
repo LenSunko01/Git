@@ -1,5 +1,6 @@
 package ru.itmo.mit.git;
 
+import ru.itmo.mit.git.objects.Commit;
 import ru.itmo.mit.git.objects.Tree;
 
 import java.io.File;
@@ -15,6 +16,10 @@ public class GitIndex {
 
     private GitIndex() { }
 
+    public String getFileBlobShaByFilePath(String filePath) throws GitException {
+        return root.getFileBlobShaByFilePath(filePath);
+    }
+
     public void addFile(String filePath) throws GitException {
         var fullPath = pathService.getFullPath(filePath);
         if (!Files.exists(fullPath)) {
@@ -22,6 +27,19 @@ public class GitIndex {
             return;
         }
         root.addFileToTree(filePath);
+    }
+
+    public void deleteFile(String filePath) throws GitException {
+        var fullPath = pathService.getFullPath(filePath);
+        if (!Files.exists(fullPath) || !isPresent(filePath)) {
+            writer.formattedOutput("Failed to delete file " + filePath);
+            return;
+        }
+        root.deleteFileFromTree(filePath);
+    }
+
+    private boolean isPresent(String filePath) throws GitException {
+        return root.isPresent(filePath);
     }
 
     public void initialize() throws GitException {
@@ -39,5 +57,10 @@ public class GitIndex {
 
     public Tree getRoot() {
         return root;
+    }
+
+    public void updateIndexByCommit(Commit commit) throws GitException {
+        root = objectManager.getTreeBySha(commit.getTreeSha());
+        saveIndexTree();
     }
 }
