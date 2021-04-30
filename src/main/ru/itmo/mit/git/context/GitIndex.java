@@ -1,23 +1,34 @@
-package ru.itmo.mit.git;
+package ru.itmo.mit.git.context;
 
+import ru.itmo.mit.git.GitException;
 import ru.itmo.mit.git.objects.Commit;
 import ru.itmo.mit.git.objects.Tree;
 
-import java.io.File;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 
 public class GitIndex {
     private Tree root;
-    private final GitWriter writer = GitWriter.getInstance();
-    private final GitPathService pathService = GitPathService.getInstance();
-    private final GitObjectManager objectManager = GitObjectManager.getInstance();
-    private final GitFileUtils fileUtils = GitFileUtils.getInstance();
+    private final GitWriter writer;
+    private final GitPathService pathService;
+    private final GitObjectManager objectManager;
+    private final GitFileUtils fileUtils;
+    private final GitTreeManager treeManager;
 
-    private GitIndex() { }
+    public GitIndex(
+            GitWriter writer,
+            GitPathService pathService,
+            GitObjectManager objectManager,
+            GitFileUtils fileUtils,
+            GitTreeManager treeManager) {
+        this.writer = writer;
+        this.pathService = pathService;
+        this.objectManager = objectManager;
+        this.fileUtils = fileUtils;
+        this.treeManager = treeManager;
+    }
 
     public String getFileBlobShaByFilePath(String filePath) throws GitException {
-        return root.getFileBlobShaByFilePath(filePath);
+        return treeManager.getFileBlobShaByFilePath(root, filePath);
     }
 
     public void addFile(String filePath) throws GitException {
@@ -26,20 +37,21 @@ public class GitIndex {
             writer.formattedOutput("Failed to add non-existent file " + filePath);
             return;
         }
-        root.addFileToTree(filePath);
+        treeManager.addFileToTree(root, filePath);
     }
 
-    public void deleteFile(String filePath) throws GitException {
+    public boolean deleteFile(String filePath) throws GitException {
         var fullPath = pathService.getFullPath(filePath);
         if (!Files.exists(fullPath) || !isPresent(filePath)) {
-            writer.formattedOutput("Failed to delete file " + filePath);
-            return;
+            writer.formattedOutput("Failed to delete " + filePath);
+            return false;
         }
-        root.deleteFileFromTree(filePath);
+        treeManager.deleteFileFromTree(root, filePath);
+        return true;
     }
 
     private boolean isPresent(String filePath) throws GitException {
-        return root.isPresent(filePath);
+        return treeManager.isPresent(root, filePath);
     }
 
     public void initialize() throws GitException {
@@ -48,11 +60,6 @@ public class GitIndex {
 
     public void saveIndexTree() throws GitException {
         fileUtils.writeToFile(pathService.getPathToIndexFile(), root.getSha());
-    }
-
-    private static final GitIndex instance = new GitIndex();
-    public static GitIndex getInstance() {
-        return instance;
     }
 
     public Tree getRoot() {

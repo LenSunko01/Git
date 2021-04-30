@@ -1,0 +1,14 @@
+----------------------------
+Command: init
+Git: Project initialized
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Everything up to date
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Command: log
+-*-*--*---*----*------Log------*----*---*--*-*-
+No commits yet
+-*-*--*---*----*------Log------*----*---*--*-*-

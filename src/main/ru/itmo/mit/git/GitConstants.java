@@ -33,4 +33,6 @@ public final class GitConstants {
     public final static String EMPTY = "";
     public final static String revisionHeadPrefix = "HEAD~";
     public final static String dateFormat = "dd-MM-yyyy HH:mm:ss";
+    public final static String COMMIT_DATE = "DATE TIME";
+    public final static String COMMIT_HASH = "COMMIT_HASH";
 }

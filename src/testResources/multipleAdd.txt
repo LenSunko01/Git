@@ -1,0 +1,92 @@
+----------------------------
+Command: init
+Git: Project initialized
+----------------------------
+Create directory 'Directory1'
+----------------------------
+Create directory 'Directory2'
+----------------------------
+Create file 'Directory1/file.txt' with content 'aaa'
+----------------------------
+Create file 'Directory2/file.txt' with content 'abb'
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Untracked files:
+	Directory1/file.txt
+	Directory2/file.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Command: add Directory1/file.txt Directory2/file.txt
+Git: Files added successfully
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Files staged for commit:
+	New files:
+		Directory1/file.txt
+		Directory2/file.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Command: commit First commit
+Git: New commit 50be63293325df91479fb83d8c38ff3eb37e5713 at DATE TIME
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Everything up to date
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Command: log
+-*-*--*---*----*------Log------*----*---*--*-*-
+* 50be63293325df91479fb83d8c38ff3eb37e5713 DATE TIME First commit
+-*-*--*---*----*------Log------*----*---*--*-*-
+----------------------------
+Create directory 'Directory1/Directory3'
+----------------------------
+Create file 'Directory1/Directory3/newfile.txt' with content 'aaa'
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Untracked files:
+	Directory1/Directory3/newfile.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Command: add Directory1/Directory3/newfile.txt
+Git: Files added successfully
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Files staged for commit:
+	New files:
+		Directory1/Directory3/newfile.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Command: commit Second commit
+Git: New commit 2e7ce445c78e16f6e0711fc1e4c6088df5445d8e at DATE TIME
+----------------------------
+Create file 'file.txt' with content 'bcd'
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Untracked files:
+	file.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Command: add file.txt
+Git: Files added successfully
+----------------------------
+Command: commit Third commit
+Git: New commit 77af37c1c72141bf81befb738b80fcdb9e71d4bf at DATE TIME
+----------------------------
+Command: log
+-*-*--*---*----*------Log------*----*---*--*-*-
+* 77af37c1c72141bf81befb738b80fcdb9e71d4bf DATE TIME Third commit
+* 2e7ce445c78e16f6e0711fc1e4c6088df5445d8e DATE TIME Second commit
+* 50be63293325df91479fb83d8c38ff3eb37e5713 DATE TIME First commit
+-*-*--*---*----*------Log------*----*---*--*-*-

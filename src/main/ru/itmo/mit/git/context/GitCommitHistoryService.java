@@ -1,18 +1,16 @@
-package ru.itmo.mit.git;
+package ru.itmo.mit.git.context;
 
+import ru.itmo.mit.git.GitException;
 import ru.itmo.mit.git.objects.Commit;
-import ru.itmo.mit.git.objects.GitObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GitCommitHistoryService {
-    private final GitObjectManager objectManager = GitObjectManager.getInstance();
+    private final GitObjectManager objectManager;
 
-    private GitCommitHistoryService() {}
-    private static final GitCommitHistoryService instance = new GitCommitHistoryService();
-    public static GitCommitHistoryService getInstance() {
-        return instance;
+    public GitCommitHistoryService(GitObjectManager objectManager) {
+        this.objectManager = objectManager;
     }
 
     public Commit getParentCommit(String sha, int count) throws GitException {

@@ -1,0 +1,6 @@
+----------------------------
+Command: init
+Git: Project initialized
+----------------------------
+Command: init
+Git: Already a git repository

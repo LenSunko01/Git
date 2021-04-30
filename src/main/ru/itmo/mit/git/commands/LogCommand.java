@@ -1,32 +1,30 @@
 package ru.itmo.mit.git.commands;
 
-import ru.itmo.mit.git.*;
-import ru.itmo.mit.git.objects.Commit;
+import ru.itmo.mit.git.GitException;
+import ru.itmo.mit.git.Revision;
+import ru.itmo.mit.git.context.Context;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-public class LogCommand implements Command {
+public class LogCommand extends Command {
     private final Revision revision;
-    private final GitObjectManager objectManager = GitObjectManager.getInstance();
-    private final GitWriter writer = GitWriter.getInstance();
-    private final GitCommitHistoryService commitHistoryService = GitCommitHistoryService.getInstance();
-    private final GitFileUtils fileUtils = GitFileUtils.getInstance();
-    private final GitPathService pathService = GitPathService.getInstance();
 
-    public LogCommand(Revision revision) {
+    public LogCommand(Context context, Revision revision) {
+        super(context);
         this.revision = revision;
     }
 
-    public LogCommand() {
+    public LogCommand(Context context) {
+        super(context);
         revision = null;
     }
 
     private void executeHeadArgument(int count) throws GitException {
         var currentCommitSha = objectManager.getHeadCommitSha();
         if (currentCommitSha.isEmpty()) {
+            writer.formattedOutputLog(new ArrayList<>());
             return;
         }
         var commit = commitHistoryService.getParentCommit(currentCommitSha, count);

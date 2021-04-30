@@ -4,27 +4,47 @@ Git: Project initialized
 ----------------------------
 Create file 'file.txt' with content 'aaa'
 ----------------------------
-Command: add file.txt
-Git: Files added successfully
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Untracked files:
+	file.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
-Command: commit Add file.txt
-Git: New commit a8cd402a3965bbd1364b4be94e1324f2b0763746 at DATE TIME
-----------------------------
-Delete file file.txt
+Command: init
+Git: Already a git repository
 ----------------------------
 Command: status
 -*-*--*---*----*-----Status-----*----*---*--*-*-
 Currently at branch master
-Files not staged for commit:
-	Deleted files:
+Untracked files:
+	file.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Command: add file.txt
+Git: Files added successfully
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Files staged for commit:
+	New files:
 		file.txt
 -*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
-Command: checkout -- file.txt
-Git: Checkout completed successfully
+Command: init
+Git: Already a git repository
 ----------------------------
-Command: content of file file.txt
-aaa
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Files staged for commit:
+	New files:
+		file.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Command: commit file.txt
+Git: New commit 265a1ea6b1418f1cbc58eed78a8369dea6f5fc02 at DATE TIME
 ----------------------------
 Command: status
 -*-*--*---*----*-----Status-----*----*---*--*-*-
@@ -32,24 +52,8 @@ Currently at branch master
 Everything up to date
 -*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
-Create file 'file.txt' with content 'bbb'
-----------------------------
-Command: content of file file.txt
-bbb
-----------------------------
-Command: status
--*-*--*---*----*-----Status-----*----*---*--*-*-
-Currently at branch master
-Files not staged for commit:
-	Modified files:
-		file.txt
--*-*--*---*----*-----Status-----*----*---*--*-*-
-----------------------------
-Command: checkout -- file.txt
-Git: Checkout completed successfully
-----------------------------
-Command: content of file file.txt
-aaa
+Command: init
+Git: Already a git repository
 ----------------------------
 Command: status
 -*-*--*---*----*-----Status-----*----*---*--*-*-

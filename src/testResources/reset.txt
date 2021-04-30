@@ -1,84 +1,50 @@
 ----------------------------
 Command: init
-Project initialized
+Git: Project initialized
 ----------------------------
 Create file 'file.txt' with content 'aaa'
 ----------------------------
 Command: add file.txt
-Add completed successful
+Git: Files added successfully
 ----------------------------
 Command: commit First commit
-Files committed
+Git: New commit 85d5421730acc7ee0f3a6d5269d655ccc3408940 at DATE TIME
 ----------------------------
 Create file 'file.txt' with content 'bbb'
 ----------------------------
 Command: add file.txt
-Add completed successful
+Git: Files added successfully
 ----------------------------
 Command: commit Second commit
-Files committed
+Git: New commit 724baf93e3e3288b404c33c622d9886a678ca238 at DATE TIME
 ----------------------------
 Command: log
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-Second commit
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-First commit
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-Initial commit
+-*-*--*---*----*------Log------*----*---*--*-*-
+* 724baf93e3e3288b404c33c622d9886a678ca238 DATE TIME Second commit
+* 85d5421730acc7ee0f3a6d5269d655ccc3408940 DATE TIME First commit
+-*-*--*---*----*------Log------*----*---*--*-*-
 ----------------------------
 Command: reset HEAD~1
-Reset successful
+Git: Reset completed successfully
 ----------------------------
 Command: content of file file.txt
 aaa
 ----------------------------
 Command: log
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-First commit
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-Initial commit
+-*-*--*---*----*------Log------*----*---*--*-*-
+* 85d5421730acc7ee0f3a6d5269d655ccc3408940 DATE TIME First commit
+-*-*--*---*----*------Log------*----*---*--*-*-
 ----------------------------
 Create file 'file.txt' with content 'ccc'
 ----------------------------
 Command: add file.txt
-Add completed successful
+Git: Files added successfully
 ----------------------------
 Command: commit Third commit
-Files committed
+Git: New commit 352d235a35be1aac03d69e091ade93eb2fa6d414 at DATE TIME
 ----------------------------
 Command: log
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-Third commit
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-First commit
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-Initial commit
+-*-*--*---*----*------Log------*----*---*--*-*-
+* 352d235a35be1aac03d69e091ade93eb2fa6d414 DATE TIME Third commit
+* 85d5421730acc7ee0f3a6d5269d655ccc3408940 DATE TIME First commit
+-*-*--*---*----*------Log------*----*---*--*-*-

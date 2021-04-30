@@ -1,132 +1,92 @@
 ----------------------------
 Command: init
-Project initialized
+Git: Project initialized
 ----------------------------
 Create file 'file1.txt' with content 'aaa'
 ----------------------------
 Command: add file1.txt
-Add completed successful
+Git: Files added successfully
 ----------------------------
 Command: commit file1.txt
-Files committed
+Git: New commit 698278d60214460e6d1fa2876aa646a66537ae1b at DATE TIME
 ----------------------------
 Command: branch-create develop
-Branch develop created successfully
-You can checkout it with 'checkout develop'
+Git: Branch created. You are currently at 'develop'
 ----------------------------
 Create file 'file2.txt' with content 'bbb'
 ----------------------------
 Command: add file2.txt
-Add completed successful
+Git: Files added successfully
 ----------------------------
 Command: commit file2.txt
-Files committed
+Git: New commit 1fe93c6b61a378b33557b457fa068de2b9bc1c16 at DATE TIME
 ----------------------------
 Command: status
-Current branch is 'develop'
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch develop
 Everything up to date
+-*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: log
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-file2.txt
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-file1.txt
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-Initial commit
+-*-*--*---*----*------Log------*----*---*--*-*-
+* 1fe93c6b61a378b33557b457fa068de2b9bc1c16 DATE TIME file2.txt
+* 698278d60214460e6d1fa2876aa646a66537ae1b DATE TIME file1.txt
+-*-*--*---*----*------Log------*----*---*--*-*-
 ----------------------------
 Command: show-branches
-Available branches:
-master
-develop
+-*-*--*---*----*----Branches----*----*---*--*-*-
+	master
+	--->develop
+-*-*--*---*----*----Branches----*----*---*--*-*-
 ----------------------------
 Command: checkout master
-Checkout completed successful
+Git: Checkout completed successfully
 ----------------------------
 Command: status
-Current branch is 'master'
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
 Everything up to date
+-*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: log
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-file1.txt
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-Initial commit
+-*-*--*---*----*------Log------*----*---*--*-*-
+* 698278d60214460e6d1fa2876aa646a66537ae1b DATE TIME file1.txt
+-*-*--*---*----*------Log------*----*---*--*-*-
 ----------------------------
 Command: branch-create new-feature
-Branch new-feature created successfully
-You can checkout it with 'checkout new-feature'
+Git: Branch created. You are currently at 'new-feature'
 ----------------------------
 Create file 'file3.txt' with content 'ccc'
 ----------------------------
 Command: add file3.txt
-Add completed successful
+Git: Files added successfully
 ----------------------------
 Command: commit file3.txt
-Files committed
+Git: New commit 709382e196edd42b325ef07e7354219f008d887a at DATE TIME
 ----------------------------
 Command: status
-Current branch is 'new-feature'
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch new-feature
 Everything up to date
+-*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: log
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-file3.txt
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-file1.txt
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-Initial commit
+-*-*--*---*----*------Log------*----*---*--*-*-
+* 709382e196edd42b325ef07e7354219f008d887a DATE TIME file3.txt
+* 698278d60214460e6d1fa2876aa646a66537ae1b DATE TIME file1.txt
+-*-*--*---*----*------Log------*----*---*--*-*-
 ----------------------------
 Command: checkout develop
-Checkout completed successful
+Git: Checkout completed successfully
 ----------------------------
 Command: status
-Current branch is 'develop'
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch develop
 Everything up to date
+-*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: log
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-file2.txt
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-file1.txt
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-Initial commit
+-*-*--*---*----*------Log------*----*---*--*-*-
+* 1fe93c6b61a378b33557b457fa068de2b9bc1c16 DATE TIME file2.txt
+* 698278d60214460e6d1fa2876aa646a66537ae1b DATE TIME file1.txt
+-*-*--*---*----*------Log------*----*---*--*-*-

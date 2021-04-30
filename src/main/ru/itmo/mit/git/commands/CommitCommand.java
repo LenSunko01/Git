@@ -1,20 +1,16 @@
 package ru.itmo.mit.git.commands;
 
-import ru.itmo.mit.git.*;
+import ru.itmo.mit.git.GitException;
+import ru.itmo.mit.git.context.Context;
 import ru.itmo.mit.git.objects.Commit;
 
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-public class CommitCommand implements Command {
-    private String message;
-    private GitFileUtils fileUtils = GitFileUtils.getInstance();
-    private GitPathService pathService = GitPathService.getInstance();
-    private GitObjectManager objectManager = GitObjectManager.getInstance();
-    private GitWriter writer = GitWriter.getInstance();
+public class CommitCommand extends Command {
+    private final String message;
 
-    public CommitCommand(String message) {
+    public CommitCommand(Context context, String message) {
+        super(context);
         this.message = message;
     }
 
@@ -27,20 +23,20 @@ public class CommitCommand implements Command {
             fileUtils.writeDetachedToHeadFile(newCommitSha);
             return;
         }
-        var branchName = objectManager.getHeadBranch();
+        var branchName = objectManager.getHeadBranchRelativePath();
         fileUtils.writeToFile(Paths.get(branchName), newCommitSha);
     }
 
     @Override
     public void execute() throws GitException {
-        Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat(GitConstants.dateFormat);
-        var commit = new Commit(formatter.format(date));
+        if (statusManager.compareIndexAndHead().areEqual()) {
+            writer.formattedOutput("Failure - nothing added to commit");
+            return;
+        }
+        var commit = new Commit(dateService.getDate());
         commit.setMessage(message);
-
         commit.setParent(getCommitParentSha());
-        var gitIndex = GitIndex.getInstance();
-        commit.setTreeSha(gitIndex.getRoot().getSha());
+        commit.setTreeSha(index.getRoot().getSha());
         commit.calculateCommitContent();
         changeCurrentBranchCommit(commit.getSha());
         objectManager.saveCommitFile(commit);

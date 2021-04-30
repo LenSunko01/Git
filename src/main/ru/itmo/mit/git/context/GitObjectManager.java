@@ -1,6 +1,7 @@
-package ru.itmo.mit.git;
+package ru.itmo.mit.git.context;
 
-import org.apache.commons.codec.binary.StringUtils;
+import ru.itmo.mit.git.GitConstants;
+import ru.itmo.mit.git.GitException;
 import ru.itmo.mit.git.objects.Blob;
 import ru.itmo.mit.git.objects.Commit;
 import ru.itmo.mit.git.objects.Tree;
@@ -14,14 +15,12 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class GitObjectManager {
-    private GitObjectManager() {}
-    private static final GitObjectManager instance = new GitObjectManager();
-    private static final GitFileUtils fileUtils = GitFileUtils.getInstance();
-    private final GitWriter writer = GitWriter.getInstance();
-    public static GitObjectManager getInstance() {
-        return instance;
+    public GitObjectManager(GitFileUtils fileUtils, GitPathService pathService) {
+        this.fileUtils = fileUtils;
+        this.pathService = pathService;
     }
-    private final GitPathService pathService = GitPathService.getInstance();
+    private final GitFileUtils fileUtils;
+    private final GitPathService pathService;
 
     /*tree sha parentCommitSha date message*/
     public Commit getCommitBySha(String sha) throws GitException {
@@ -56,7 +55,12 @@ public class GitObjectManager {
         return !headContent.startsWith("branch ");
     }
 
-    public String getHeadBranch() throws GitException {
+    public String getHeadBranchName() throws GitException {
+        var relativePath = Paths.get(getHeadBranchRelativePath());
+        return relativePath.getFileName().toString();
+    }
+
+    public String getHeadBranchRelativePath() throws GitException {
         var headContent = fileUtils.readFromFile(pathService.getPathToHeadFile());
         if (headContent.startsWith("branch ")) {
             return headContent.substring("branch ".length());

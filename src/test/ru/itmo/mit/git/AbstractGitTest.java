@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.PrintStream;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -103,6 +105,18 @@ public abstract class AbstractGitTest {
         FileUtils.writeStringToFile(file, content, Charset.defaultCharset());
     }
 
+    protected void createDirectory(@NotNull String directoryName) throws Exception {
+        output.println(DASHES);
+        output.println("Create directory '" + directoryName + "'");
+        Files.createDirectories(Paths.get(projectDir + File.separator + directoryName));
+    }
+
+    protected void changeFile(@NotNull String fileName, @NotNull String newContent) throws Exception {
+        output.println(DASHES);
+        output.println("Update file '" + fileName + "' with new content '" + newContent + "'");
+        FileUtils.writeStringToFile(new File(projectDir + File.separator + fileName), newContent, Charset.defaultCharset());
+    }
+
     // rm fileName
     protected void deleteFile(@NotNull String fileName) {
         output.println(DASHES);
@@ -117,6 +131,14 @@ public abstract class AbstractGitTest {
         output.println(DASHES);
         output.println("Command: content of file " + fileName);
         output.println(content);
+    }
+
+    protected void verifyFileDoesNotExist(@NotNull String fileName) {
+        assert(!Files.exists(Paths.get(projectDir + File.separator + fileName)));
+    }
+
+    protected void init() throws GitException {
+        runCommand(GitConstants.INIT);
     }
 
     // git status
@@ -137,6 +159,26 @@ public abstract class AbstractGitTest {
     // git commit message
     protected void commit(String message) throws GitException {
         runCommand(GitConstants.COMMIT, message);
+    }
+
+    protected void resetCommitHash(String hash) throws GitException {
+        runCommand(GitConstants.RESET, hash);
+    }
+
+    protected void resetHead(int n) throws GitException {
+        runCommand(GitConstants.RESET, "HEAD~" + n);
+    }
+
+    protected void resetBranch(String branch) throws GitException {
+        runCommand(GitConstants.RESET, branch);
+    }
+
+    protected void checkoutCommitHash(String hash) throws GitException {
+        runCommand(GitConstants.CHECKOUT, hash);
+    }
+
+    protected void checkoutHead(int n) throws GitException {
+        runCommand(GitConstants.CHECKOUT, "HEAD~" + n);
     }
 
     // git reset HEAD~to
@@ -162,6 +204,18 @@ public abstract class AbstractGitTest {
     // git log
     protected void log() throws GitException {
         runCommand(GitConstants.LOG);
+    }
+
+    protected void logHashCommit(String hash) throws GitException {
+        runCommand(GitConstants.LOG, hash);
+    }
+
+    protected void logHead(int n) throws GitException {
+        runCommand(GitConstants.LOG, "HEAD~" + n);
+    }
+
+    protected void logBranch(String branchName) throws GitException {
+        runCommand(GitConstants.LOG, branchName);
     }
 
     // git branch-create branch

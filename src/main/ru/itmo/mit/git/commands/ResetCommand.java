@@ -1,18 +1,15 @@
 package ru.itmo.mit.git.commands;
 
 import ru.itmo.mit.git.*;
+import ru.itmo.mit.git.context.*;
 
 import java.io.File;
 import java.nio.file.Paths;
 
-public class ResetCommand implements Command {
+public class ResetCommand extends Command {
     private final Revision revision;
-    private final GitObjectManager objectManager = GitObjectManager.getInstance();
-    private final GitCommitHistoryService commitHistoryService = GitCommitHistoryService.getInstance();
-    private final GitFileSystemManager fileSystemManager = GitFileSystemManager.getInstance();
-    private final GitFileUtils fileUtils = GitFileUtils.getInstance();
-    private final GitPathService pathService = GitPathService.getInstance();
-    public ResetCommand(Revision revision) {
+    public ResetCommand(Context context, Revision revision) {
+        super(context);
         this.revision = revision;
     }
 
@@ -20,14 +17,17 @@ public class ResetCommand implements Command {
     public void execute() throws GitException {
         if (revision.isHeadArgument()) {
             executeHeadArgument(revision.getCount());
+            writer.formattedOutput("Reset completed successfully");
             return;
         }
         if (revision.isBranchName()) {
             executeBranchNameArgument(revision.getArgument());
+            writer.formattedOutput("Reset completed successfully");
             return;
         }
         if (revision.isCommitSha()) {
             executeCommitShaArgument(revision.getArgument());
+            writer.formattedOutput("Reset completed successfully");
             return;
         }
         throw new GitException("Unknown revision");
@@ -39,7 +39,7 @@ public class ResetCommand implements Command {
         if (objectManager.isDetachedHead()) {
             fileUtils.writeDetachedToHeadFile(commitSha);
         } else {
-            fileUtils.writeToFile(Paths.get(objectManager.getHeadBranch()), commitSha);
+            fileUtils.writeToFile(Paths.get(objectManager.getHeadBranchRelativePath()), commitSha);
         }
     }
 

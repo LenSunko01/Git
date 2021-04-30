@@ -1,23 +1,23 @@
 package ru.itmo.mit.git.commands;
 
 import ru.itmo.mit.git.GitException;
-import ru.itmo.mit.git.GitIndex;
+import ru.itmo.mit.git.context.Context;
 
 import java.util.List;
 
-public class AddCommand implements Command {
+public class AddCommand extends Command {
     private final List<String> files;
-    private final GitIndex gitIndex = GitIndex.getInstance();
-
-    public AddCommand(List<String> files) {
+    public AddCommand(Context context, List<String> files) {
+        super(context);
         this.files = files;
     }
 
     @Override
     public void execute() throws GitException {
         for (var file : files) {
-            gitIndex.addFile(file);
+            index.addFile(file);
         }
-        gitIndex.saveIndexTree();
+        index.saveIndexTree();
+        writer.formattedOutput("Files added successfully");
     }
 }

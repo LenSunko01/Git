@@ -1,83 +1,54 @@
 ----------------------------
 Command: init
-Project initialized
+Git: Project initialized
 ----------------------------
 Create file 'file.txt' with content 'aaa'
 ----------------------------
 Command: add file.txt
-Add completed successful
+Git: Files added successfully
 ----------------------------
 Command: commit First commit
-Files committed
+Git: New commit 85d5421730acc7ee0f3a6d5269d655ccc3408940 at DATE TIME
 ----------------------------
 Create file 'file.txt' with content 'bbb'
 ----------------------------
 Command: add file.txt
-Add completed successful
+Git: Files added successfully
 ----------------------------
 Command: commit Second commit
-Files committed
+Git: New commit 724baf93e3e3288b404c33c622d9886a678ca238 at DATE TIME
 ----------------------------
 Command: log
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-Second commit
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-First commit
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-Initial commit
+-*-*--*---*----*------Log------*----*---*--*-*-
+* 724baf93e3e3288b404c33c622d9886a678ca238 DATE TIME Second commit
+* 85d5421730acc7ee0f3a6d5269d655ccc3408940 DATE TIME First commit
+-*-*--*---*----*------Log------*----*---*--*-*-
 ----------------------------
 Command: checkout HEAD~1
-Checkout completed successful
+Git: Checkout completed successfully
 ----------------------------
 Command: status
-Error while performing status: Head is detached
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently in detached HEAD state at: 85d5421730acc7ee0f3a6d5269d655ccc3408940
+Everything up to date
+-*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: log
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-First commit
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-Initial commit
+-*-*--*---*----*------Log------*----*---*--*-*-
+* 85d5421730acc7ee0f3a6d5269d655ccc3408940 DATE TIME First commit
+-*-*--*---*----*------Log------*----*---*--*-*-
 ----------------------------
 Command: checkout master
-Checkout completed successful
+Git: Checkout completed successfully
 ----------------------------
 Command: status
-Current branch is 'master'
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
 Everything up to date
+-*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: log
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-Second commit
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-First commit
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-Initial commit
+-*-*--*---*----*------Log------*----*---*--*-*-
+* 724baf93e3e3288b404c33c622d9886a678ca238 DATE TIME Second commit
+* 85d5421730acc7ee0f3a6d5269d655ccc3408940 DATE TIME First commit
+-*-*--*---*----*------Log------*----*---*--*-*-

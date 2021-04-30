@@ -1,9 +1,8 @@
-package ru.itmo.mit.git;
+package ru.itmo.mit.git.context;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,15 +19,9 @@ public class GitPathService {
     private Path pathToTreesFolder;
     private Path pathToCommitsFolder;
 
-    private final static GitPathService instance = new GitPathService();
-
-    private GitPathService() {
-        pathToGitRepository = Paths.get("/home/mario/correct unix"); //Paths.get(System.getProperty("user.dir"));
+    public GitPathService() {
+        pathToGitRepository = Paths.get(System.getProperty("user.dir"));
         initialize();
-    }
-
-    public static GitPathService getInstance() {
-        return instance;
     }
 
     private void initialize() {
@@ -102,11 +95,19 @@ public class GitPathService {
                 + File.separator + sha);
     }
 
+    public String getBranchNameFromPath(Path path) {
+        return path.getFileName().toString();
+    }
+
     public Path getRelativePath(Path path) {
         return pathToGitRepository.relativize(path);
     }
 
     public boolean fileBelongsToGitFolder(Path path) {
         return path.startsWith(pathToGitFolder);
+    }
+
+    public Path getPathToBranchByName(String branchName) {
+        return Paths.get(pathToHeadsFolder + File.separator + branchName);
     }
 }

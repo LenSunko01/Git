@@ -1,0 +1,6 @@
+----------------------------
+Command: init
+Git: Project initialized
+----------------------------
+Command: commit Empty repository commit
+Git: Failure - nothing added to commit

@@ -1,5 +1,8 @@
 package ru.itmo.mit.git;
 
+import ru.itmo.mit.git.context.Context;
+import ru.itmo.mit.git.context.GitPathService;
+
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -11,7 +14,7 @@ public class Revision {
     private boolean isHeadArgument = false;
     private int count = 0;
 
-    public Revision(String revision) {
+    public Revision(Context context, String revision) {
         if (revision == null) {
             return;
         }
@@ -26,7 +29,7 @@ public class Revision {
                 isHeadArgument = false;
             }
         }
-        GitPathService pathService = GitPathService.getInstance();
+        var pathService = context.getPathService();
         var path = Paths.get(pathService.getPathToHeadsFolder() + File.separator + revision);
         if (Files.exists(path)) {
             isBranchName = true;
@@ -59,7 +62,11 @@ public class Revision {
         return argument;
     }
 
-    public static Revision parseRevision(String revision) {
-        return new Revision(revision);
+    public static Revision parseRevision(Context context, String revision) throws GitException {
+        var result = new Revision(context, revision);
+        if (result.getCount() < 0) {
+            throw new GitException("Illegal HEAD~ argument");
+        }
+        return result;
     }
 }

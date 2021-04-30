@@ -1,24 +1,29 @@
-package ru.itmo.mit.git;
+package ru.itmo.mit.git.context;
 
 import org.apache.commons.io.FileUtils;
+import ru.itmo.mit.git.*;
 import ru.itmo.mit.git.objects.Commit;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GitFileSystemManager {
-    private final GitObjectManager objectManager = GitObjectManager.getInstance();
-    private final GitPathService pathService = GitPathService.getInstance();
-    private final GitIndex gitIndex = GitIndex.getInstance();
-    private GitFileSystemManager() {}
-    private static final GitFileSystemManager instance = new GitFileSystemManager();
-    public static GitFileSystemManager getInstance() {
-        return instance;
+    private final GitObjectManager objectManager;
+    private final GitPathService pathService;
+    private final GitIndex index;
+    private final GitStatusManager statusManager;
+    public GitFileSystemManager(
+            GitObjectManager objectManager,
+            GitPathService pathService,
+            GitIndex index, GitStatusManager statusManager) {
+        this.objectManager = objectManager;
+        this.pathService = pathService;
+        this.index = index;
+        this.statusManager = statusManager;
     }
 
     private void createFileByBlobSha(Map.Entry<String, String> fileEntry) throws GitException {
@@ -32,17 +37,18 @@ public class GitFileSystemManager {
         }
     }
 
-    public void updateWorkingTreeFileFromIndex(String filePath) throws GitException {
+    public boolean updateWorkingTreeFileFromIndex(String filePath) throws GitException {
         var path = Paths.get(filePath);
         try {
-            var blobSha = gitIndex.getFileBlobShaByFilePath(pathService.getRelativePath(Paths.get(filePath)).toString());
+            var blobSha = index.getFileBlobShaByFilePath(pathService.getRelativePath(Paths.get(filePath)).toString());
+            if (blobSha == null) {
+                return false;
+            }
             if (Files.exists(path)) {
                 Files.delete(path);
             }
-            if (blobSha == null) {
-                return;
-            }
             Files.copy(pathService.getPathToBlobBySha(blobSha), Paths.get(filePath));
+            return true;
         } catch (IOException e) {
             throw new GitException("Exception while updating a file");
         }
@@ -65,7 +71,7 @@ public class GitFileSystemManager {
             e.printStackTrace();
         }
 
-        var filesInTree = GitStatusManager.getAllFilesFromTree(
+        var filesInTree = statusManager.getAllFilesFromTree(
                 objectManager.getTreeBySha(commit.getTreeSha()), GitConstants.EMPTY);
         for (var entryFile : filesInTree.entrySet()) {
             createFileByBlobSha(entryFile);
@@ -74,6 +80,6 @@ public class GitFileSystemManager {
 
     public void updateFileSystemByCommit(Commit commit) throws GitException {
         updateWorkingTreeByCommit(commit);
-        gitIndex.updateIndexByCommit(commit);
+        index.updateIndexByCommit(commit);
     }
 }

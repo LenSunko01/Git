@@ -4,32 +4,17 @@ Git: Project initialized
 ----------------------------
 Create file 'file.txt' with content 'aaa'
 ----------------------------
-Command: status
--*-*--*---*----*-----Status-----*----*---*--*-*-
-Currently at branch master
-Untracked files:
-	file.txt
--*-*--*---*----*-----Status-----*----*---*--*-*-
-----------------------------
 Command: add file.txt
 Git: Files added successfully
-----------------------------
-Command: status
--*-*--*---*----*-----Status-----*----*---*--*-*-
-Currently at branch master
-Files staged for commit:
-	New files:
-		file.txt
--*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: commit First commit
 Git: New commit 85d5421730acc7ee0f3a6d5269d655ccc3408940 at DATE TIME
 ----------------------------
-Command: status
--*-*--*---*----*-----Status-----*----*---*--*-*-
-Currently at branch master
-Everything up to date
--*-*--*---*----*-----Status-----*----*---*--*-*-
+Command: commit Second commit
+Git: Failure - nothing added to commit
+----------------------------
+Command: commit First commit
+Git: Failure - nothing added to commit
 ----------------------------
 Command: log
 -*-*--*---*----*------Log------*----*---*--*-*-

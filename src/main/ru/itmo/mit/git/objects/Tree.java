@@ -1,16 +1,14 @@
 package ru.itmo.mit.git.objects;
 
 import ru.itmo.mit.git.GitException;
-import ru.itmo.mit.git.GitObjectManager;
-import ru.itmo.mit.git.GitPathService;
+import ru.itmo.mit.git.context.GitObjectManager;
+import ru.itmo.mit.git.context.GitPathService;
 
 import java.io.File;
 import java.util.TreeMap;
 
 public class Tree extends GitObject {
     private String name = "";
-    private final GitPathService pathService = GitPathService.getInstance();
-    private final GitObjectManager objectManager = GitObjectManager.getInstance();
 
     private TreeMap<String, String> blobsShaToName = new TreeMap<>();
     private TreeMap<String, String> treesShaToName = new TreeMap<>();
@@ -34,86 +32,11 @@ public class Tree extends GitObject {
         updateSha();
     }
 
-    public void deleteFileFromTree(String filePath) throws GitException {
-        var pathService = GitPathService.getInstance();
-        deleteFileFromTree(filePath, this, new File(pathService.getFullPath(filePath).toString()));
-    }
-
-    private static Tree deleteFileFromTree(String filePath, Tree tree, File file) throws GitException {
-        var objectManager = GitObjectManager.getInstance();
-        var pathService = GitPathService.getInstance();
-
-        var pathTokens = pathService.getPathTokens(filePath);
-        var token = pathTokens.get(0);
-        if (pathTokens.size() > 1) {
-            var currentPrefix = token + File.separator;
-            if (tree.treesNameToSha.containsKey(token)) {
-                var subTreeSha = tree.treesNameToSha.get(token);
-                var subTree = objectManager.getTreeBySha(subTreeSha);
-                tree.removeSubTree(subTree);
-                var newSubTree = deleteFileFromTree(filePath.substring(currentPrefix.length()), subTree, file);
-                if (newSubTree != null) {
-                    tree.addSubTree(newSubTree);
-                }
-            } else {
-                var subTree = new Tree();
-                var newSubTree = deleteFileFromTree(filePath.substring(currentPrefix.length()), subTree, file);
-                if (newSubTree != null) {
-                    tree.addSubTree(newSubTree);
-                }
-            }
-        } else {
-            tree.removeBlobByName(token);
-        }
-        tree.updateTreeContent();
-        objectManager.saveTreeFile(tree);
-        if (tree.isEmpty()) {
-            return null;
-        }
-        return tree;
-    }
-
-    private boolean isEmpty() {
+    public boolean isEmpty() {
         return (blobsNameToSha.isEmpty() && treesNameToSha.isEmpty());
     }
 
-    public void addFileToTree(String filePath) throws GitException {
-        var pathService = GitPathService.getInstance();
-        addFileToTree(filePath, this, new File(pathService.getFullPath(filePath).toString()));
-    }
-
-    private static Tree addFileToTree(String filePath, Tree tree, File file) throws GitException {
-        var objectManager = GitObjectManager.getInstance();
-        var pathService = GitPathService.getInstance();
-
-        var pathTokens = pathService.getPathTokens(filePath);
-        var token = pathTokens.get(0);
-        if (pathTokens.size() > 1) {
-            var currentPrefix = token + File.separator;
-            if (tree.treesNameToSha.containsKey(token)) {
-                var subTreeSha = tree.treesNameToSha.get(token);
-                var subTree = objectManager.getTreeBySha(subTreeSha);
-                tree.removeSubTree(subTree);
-                var newSubTree = addFileToTree(filePath.substring(currentPrefix.length()), subTree, file);
-                newSubTree.setName(token);
-                tree.addSubTree(newSubTree);
-            } else {
-                var subTree = new Tree();
-                var newSubTree = addFileToTree(filePath.substring(currentPrefix.length()), subTree, file);
-                newSubTree.setName(token);
-                tree.addSubTree(newSubTree);
-            }
-        } else {
-            var blob = objectManager.createAndSaveBlobFromFile(file);
-            tree.removeBlobByName(blob.getName());
-            tree.addBlob(blob);
-        }
-        tree.updateTreeContent();
-        objectManager.saveTreeFile(tree);
-        return tree;
-    }
-
-    private void removeBlobByName(String name) {
+    public void removeBlobByName(String name) {
         var sha = blobsNameToSha.get(name);
         if (sha != null) {
             blobsNameToSha.remove(name);
@@ -121,7 +44,7 @@ public class Tree extends GitObject {
         }
     }
 
-    private void removeSubTree(Tree subTree) {
+    public void removeSubTree(Tree subTree) {
         treesShaToName.remove(subTree.getSha());
         treesNameToSha.remove(subTree.getName());
     }
@@ -176,36 +99,9 @@ public class Tree extends GitObject {
         treesNameToSha.put(filename, sha);
     }
 
-    public boolean isPresent(String filePath) throws GitException {
-        return getFileBlobShaByFilePath(filePath) != null;
-    }
-
-    public String getFileBlobShaByFilePath(String filePath) throws GitException {
-        return getFileBlobShaByFilePath(this, filePath);
-    }
-
-    private String getFileBlobShaByFilePath(Tree tree, String filePath) throws GitException {
-        var objectManager = GitObjectManager.getInstance();
-        var pathService = GitPathService.getInstance();
-
-        var pathTokens = pathService.getPathTokens(filePath);
-        var token = pathTokens.get(0);
-        var currentPrefix = token + File.separator;
-        if (pathTokens.size() > 1) {
-            if (!tree.containsSubTreeByName(token)) {
-                return null;
-            }
-            var subTreeSha = tree.treesNameToSha.get(token);
-            var subTree = objectManager.getTreeBySha(subTreeSha);
-            return getFileBlobShaByFilePath(subTree, filePath.substring(currentPrefix.length()));
-        }
-        if (!tree.containsBlobByName(token)) {
-            return null;
-        }
-        return tree.getBlobShaByName(token);
-    }
-
-    private String getBlobShaByName(String name) {
+    public String getBlobShaByName(String name) {
         return blobsNameToSha.get(name);
     }
+
+    public String getTreeShaByName(String name) { return treesNameToSha.get(name); }
 }

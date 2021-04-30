@@ -1,21 +1,18 @@
-package ru.itmo.mit.git;
+package ru.itmo.mit.git.context;
 
-import java.io.File;
+import ru.itmo.mit.git.GitException;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.stream.Collectors;
 
 public class GitFileUtils {
-    private final GitPathService pathService = GitPathService.getInstance();
-
-    private static final GitFileUtils instance = new GitFileUtils();
-    public static GitFileUtils getInstance() {
-        return instance;
+    private final GitPathService pathService;
+    public GitFileUtils(GitPathService pathService) {
+        this.pathService = pathService;
     }
-    private GitFileUtils() {}
 
     public void writeBranchToHeadFile(String branch) throws GitException {
         writeToFile(pathService.getPathToHeadFile(), "branch " + branch);

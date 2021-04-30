@@ -1,0 +1,107 @@
+----------------------------
+Command: init
+Git: Project initialized
+----------------------------
+Create file 'first.txt' with content 'aaa'
+----------------------------
+Command: add first.txt
+Git: Files added successfully
+----------------------------
+Command: commit Add first.txt
+Git: New commit d11d33f41ce7a8d7871c2166e45c6ad72138e81f at DATE TIME
+----------------------------
+Create directory 'Directory1'
+----------------------------
+Create file 'Directory1/second.txt' with content 'hello'
+----------------------------
+Create file 'Directory1/third.txt' with content 'world'
+----------------------------
+Command: add Directory1/second.txt Directory1/third.txt
+Git: Files added successfully
+----------------------------
+Command: commit Add Directory1/second.txt, Directory1/third.txt
+Git: New commit e5348fe86b33da7efe04c7dab5ca629fbe586e0d at DATE TIME
+----------------------------
+Command: rm Directory1/third.txt
+Git: Rm completed successfully
+----------------------------
+Command: commit Delete Directory1/third.txt
+Git: New commit 023640779f4c4320aa106dcdcb9344cffb85b5bc at DATE TIME
+----------------------------
+Update file 'first.txt' with new content 'bbb'
+----------------------------
+Command: add first.txt
+Git: Files added successfully
+----------------------------
+Command: rm Directory1/second.txt
+Git: Rm completed successfully
+----------------------------
+Command: commit change first.txt content to 'bbb', delete Directory1/second.txt
+Git: New commit af7673250c3ca59d8c28a10c7f71258ba0f34cad at DATE TIME
+----------------------------
+Create file 'lastFile.txt' with content 'hello world'
+----------------------------
+Command: add lastFile.txt
+Git: Files added successfully
+----------------------------
+Command: commit add lastFile.txt
+Git: New commit d4d1970bff6309f9493f75773ea21e68b3878707 at DATE TIME
+----------------------------
+Command: log
+-*-*--*---*----*------Log------*----*---*--*-*-
+* d4d1970bff6309f9493f75773ea21e68b3878707 DATE TIME add lastFile.txt
+* af7673250c3ca59d8c28a10c7f71258ba0f34cad DATE TIME change first.txt content to 'bbb', delete Directory1/second.txt
+* 023640779f4c4320aa106dcdcb9344cffb85b5bc DATE TIME Delete Directory1/third.txt
+* e5348fe86b33da7efe04c7dab5ca629fbe586e0d DATE TIME Add Directory1/second.txt, Directory1/third.txt
+* d11d33f41ce7a8d7871c2166e45c6ad72138e81f DATE TIME Add first.txt
+-*-*--*---*----*------Log------*----*---*--*-*-
+----------------------------
+Command: log 023640779f4c4320aa106dcdcb9344cffb85b5bc
+-*-*--*---*----*------Log------*----*---*--*-*-
+* 023640779f4c4320aa106dcdcb9344cffb85b5bc DATE TIME Delete Directory1/third.txt
+* e5348fe86b33da7efe04c7dab5ca629fbe586e0d DATE TIME Add Directory1/second.txt, Directory1/third.txt
+* d11d33f41ce7a8d7871c2166e45c6ad72138e81f DATE TIME Add first.txt
+-*-*--*---*----*------Log------*----*---*--*-*-
+----------------------------
+Command: log e5348fe86b33da7efe04c7dab5ca629fbe586e0d
+-*-*--*---*----*------Log------*----*---*--*-*-
+* e5348fe86b33da7efe04c7dab5ca629fbe586e0d DATE TIME Add Directory1/second.txt, Directory1/third.txt
+* d11d33f41ce7a8d7871c2166e45c6ad72138e81f DATE TIME Add first.txt
+-*-*--*---*----*------Log------*----*---*--*-*-
+----------------------------
+Command: log HEAD~1
+-*-*--*---*----*------Log------*----*---*--*-*-
+* af7673250c3ca59d8c28a10c7f71258ba0f34cad DATE TIME change first.txt content to 'bbb', delete Directory1/second.txt
+* 023640779f4c4320aa106dcdcb9344cffb85b5bc DATE TIME Delete Directory1/third.txt
+* e5348fe86b33da7efe04c7dab5ca629fbe586e0d DATE TIME Add Directory1/second.txt, Directory1/third.txt
+* d11d33f41ce7a8d7871c2166e45c6ad72138e81f DATE TIME Add first.txt
+-*-*--*---*----*------Log------*----*---*--*-*-
+----------------------------
+Command: log HEAD~3
+-*-*--*---*----*------Log------*----*---*--*-*-
+* e5348fe86b33da7efe04c7dab5ca629fbe586e0d DATE TIME Add Directory1/second.txt, Directory1/third.txt
+* d11d33f41ce7a8d7871c2166e45c6ad72138e81f DATE TIME Add first.txt
+-*-*--*---*----*------Log------*----*---*--*-*-
+----------------------------
+Command: log HEAD~0
+-*-*--*---*----*------Log------*----*---*--*-*-
+* d4d1970bff6309f9493f75773ea21e68b3878707 DATE TIME add lastFile.txt
+* af7673250c3ca59d8c28a10c7f71258ba0f34cad DATE TIME change first.txt content to 'bbb', delete Directory1/second.txt
+* 023640779f4c4320aa106dcdcb9344cffb85b5bc DATE TIME Delete Directory1/third.txt
+* e5348fe86b33da7efe04c7dab5ca629fbe586e0d DATE TIME Add Directory1/second.txt, Directory1/third.txt
+* d11d33f41ce7a8d7871c2166e45c6ad72138e81f DATE TIME Add first.txt
+-*-*--*---*----*------Log------*----*---*--*-*-
+----------------------------
+Command: log HEAD~4
+-*-*--*---*----*------Log------*----*---*--*-*-
+* d11d33f41ce7a8d7871c2166e45c6ad72138e81f DATE TIME Add first.txt
+-*-*--*---*----*------Log------*----*---*--*-*-
+----------------------------
+Command: log master
+-*-*--*---*----*------Log------*----*---*--*-*-
+* d4d1970bff6309f9493f75773ea21e68b3878707 DATE TIME add lastFile.txt
+* af7673250c3ca59d8c28a10c7f71258ba0f34cad DATE TIME change first.txt content to 'bbb', delete Directory1/second.txt
+* 023640779f4c4320aa106dcdcb9344cffb85b5bc DATE TIME Delete Directory1/third.txt
+* e5348fe86b33da7efe04c7dab5ca629fbe586e0d DATE TIME Add Directory1/second.txt, Directory1/third.txt
+* d11d33f41ce7a8d7871c2166e45c6ad72138e81f DATE TIME Add first.txt
+-*-*--*---*----*------Log------*----*---*--*-*-

@@ -1,6 +1,7 @@
 package ru.itmo.mit.git;
 
 import org.junit.jupiter.api.Test;
+import ru.itmo.mit.git.context.test.ContextTest;
 
 /*
  * Т.к. в коммитах при каждом новом запуске получаются разные хеши и
@@ -12,7 +13,7 @@ public class GitTest extends AbstractGitTest {
     protected GitCli createCli(String workingDir) {
         Git git = null;
         try {
-            git = new Git(workingDir);
+            git = new Git(workingDir, new ContextTest());
         } catch (GitException e) {
             e.printStackTrace();
         }
@@ -21,7 +22,7 @@ public class GitTest extends AbstractGitTest {
 
     @Override
     protected TestMode testMode() {
-        return TestMode.SYSTEM_OUT;
+        return TestMode.TEST_DATA;
     }
 
     @Test
@@ -128,7 +129,275 @@ public class GitTest extends AbstractGitTest {
         check("checkout.txt");
     }
 
-    //@Test
+    @Test
+    public void testLogAndStatusEmptyRepository() throws Exception {
+        status();
+        log();
+        check("logStatusEmptyRepository.txt");
+    }
+
+    @Test
+    public void testMultipleAdd() throws Exception {
+        createDirectory("Directory1");
+        createDirectory("Directory2");
+        createFile("Directory1/file.txt", "aaa");
+        createFile("Directory2/file.txt", "abb");
+        status();
+        add("Directory1/file.txt", "Directory2/file.txt");
+        status();
+        commit("First commit");
+        status();
+        log();
+        createDirectory("Directory1/Directory3");
+        createFile("Directory1/Directory3/newfile.txt", "aaa");
+        status();
+        add("Directory1/Directory3/newfile.txt");
+        status();
+        commit("Second commit");
+        createFile("file.txt", "bcd");
+        status();
+        add("file.txt");
+        commit("Third commit");
+        log();
+        check("multipleAdd.txt");
+    }
+
+    @Test
+    public void testAddTwice() throws Exception {
+        createFile("file.txt", "aaa");
+        status();
+        add("file.txt");
+        status();
+        add("file.txt");
+        status();
+        commit("First commit");
+        status();
+        changeFile("file.txt", "changed content");
+        status();
+        add("file.txt");
+        status();
+        changeFile("file.txt", "more change");
+        add("file.txt");
+        status();
+        commit("First commit");
+        status();
+        log();
+        fileContent("file.txt");
+
+        check("addTwice.txt");
+    }
+
+    @Test
+    public void testInitTwiceBeforeChange() throws Exception {
+        init();
+
+        check("initTwiceBeforeChange.txt");
+    }
+
+    @Test
+    public void testInitMultipleTimesAfterChange() throws Exception {
+        createFile("file.txt", "aaa");
+        status();
+        init();
+        status();
+        add("file.txt");
+        status();
+        init();
+        status();
+        commit("file.txt");
+        status();
+        init();
+        status();
+
+        check("initMultipleTimesAfterChange.txt");
+    }
+
+    @Test
+    public void commitMultipleTimesNoChange() throws Exception {
+        createFile("file.txt", "aaa");
+        add("file.txt");
+        commit("First commit");
+        commit("Second commit");
+        commit("First commit");
+        log();
+
+        check("commitMultipleTimesNoChange.txt");
+    }
+
+    @Test
+    public void emptyRepositoryCommit() throws Exception {
+        commit("Empty repository commit");
+        check("emptyRepositoryCommit.txt");
+    }
+
+    @Test
+    public void rmFileNotInIndex() throws Exception {
+        createFile("file.txt", "aaa");
+        add("file.txt");
+        rm("file1.txt");
+        rm("file.txt", "file1.txt");
+        status();
+        createFile("file1.txt", "aaa");
+        add("file.txt", "file1.txt");
+        rm("file1.txt", "file.txt");
+        status();
+        add("file.txt", "file1.txt");
+        rm("file3.txt", "file.txt", "file2.txt", "file1.txt");
+        status();
+        check("rmFileNotInIndex.txt");
+    }
+
+    private void createCommitHistory() throws Exception {
+        createFile("first.txt", "aaa");
+        add("first.txt");
+        commit("Add first.txt");
+        createDirectory("Directory1");
+        createFile("Directory1/second.txt", "hello");
+        createFile("Directory1/third.txt", "world");
+        add("Directory1/second.txt", "Directory1/third.txt");
+        commit("Add Directory1/second.txt, Directory1/third.txt");
+        rm("Directory1/third.txt");
+        commit("Delete Directory1/third.txt");
+        changeFile("first.txt", "bbb");
+        add("first.txt");
+        rm("Directory1/second.txt");
+        commit("change first.txt content to 'bbb', delete Directory1/second.txt");
+        createFile("lastFile.txt", "hello world");
+        add("lastFile.txt");
+        commit("add lastFile.txt");
+    }
+
+    @Test
+    public void testResetCommitHash() throws Exception {
+        createCommitHistory();
+        log();
+        resetCommitHash("d4d1970bff6309f9493f75773ea21e68b3878707");
+        status();
+        fileContent("lastFile.txt");
+        fileContent("first.txt");
+        verifyFileDoesNotExist("Directory1/third.txt");
+        verifyFileDoesNotExist("Directory1/second.txt");
+        resetCommitHash("023640779f4c4320aa106dcdcb9344cffb85b5bc");
+        verifyFileDoesNotExist("lastFile.txt");
+        verifyFileDoesNotExist("Directory1/third.txt");
+        fileContent("first.txt");
+        fileContent("Directory1/second.txt");
+        status();
+        check("resetCommitHash.txt");
+    }
+
+    @Test
+    public void testResetHead() throws Exception {
+        createCommitHistory();
+        log();
+        resetHead(1);
+        status();
+        fileContent("first.txt");
+        verifyFileDoesNotExist("Directory1/third.txt");
+        verifyFileDoesNotExist("Directory1/second.txt");
+        verifyFileDoesNotExist("lastFile.txt");
+        resetHead(3);
+        status();
+        fileContent("first.txt");
+        verifyFileDoesNotExist("Directory1/third.txt");
+        verifyFileDoesNotExist("Directory1/second.txt");
+        verifyFileDoesNotExist("lastFile.txt");
+        check("resetHead.txt");
+    }
+
+    @Test
+    public void testResetMasterBranch() throws Exception {
+        createCommitHistory();
+        log();
+        createFile("helloFile.txt", "will be removed");
+        add("helloFile.txt");
+        createFile("worldFile.txt", "will be removed");
+        changeFile("lastFile.txt", "new content");
+        status();
+        resetBranch("master");
+        status();
+        verifyFileDoesNotExist("helloFile.txt");
+        verifyFileDoesNotExist("worldFile.txt");
+        verifyFileDoesNotExist("Directory1/third.txt");
+        verifyFileDoesNotExist("Directory1/second.txt");
+        fileContent("lastFile.txt");
+        check("resetMasterBranch.txt");
+    }
+
+    @Test
+    public void testLogDifferentArguments() throws Exception {
+        createCommitHistory();
+        log();
+        logHashCommit("023640779f4c4320aa106dcdcb9344cffb85b5bc");
+        logHashCommit("e5348fe86b33da7efe04c7dab5ca629fbe586e0d");
+        logHead(1);
+        logHead(3);
+        logHead(0);
+        logHead(4);
+        logBranch("master");
+        check("testLogDifferentArguments.txt");
+    }
+
+    @Test
+    public void testCheckoutDifferentArguments() throws Exception {
+        createCommitHistory();
+        log();
+        checkoutCommitHash("d4d1970bff6309f9493f75773ea21e68b3878707");
+        status();
+        fileContent("lastFile.txt");
+        fileContent("first.txt");
+        verifyFileDoesNotExist("Directory1/third.txt");
+        verifyFileDoesNotExist("Directory1/second.txt");
+        checkoutCommitHash("023640779f4c4320aa106dcdcb9344cffb85b5bc");
+        verifyFileDoesNotExist("lastFile.txt");
+        verifyFileDoesNotExist("Directory1/third.txt");
+        fileContent("first.txt");
+        fileContent("Directory1/second.txt");
+        status();
+        checkoutCommitHash("af7673250c3ca59d8c28a10c7f71258ba0f34cad");
+        fileContent("first.txt");
+        verifyFileDoesNotExist("Directory1/third.txt");
+        verifyFileDoesNotExist("Directory1/second.txt");
+        verifyFileDoesNotExist("lastFile.txt");
+        checkoutMaster();
+        status();
+        fileContent("first.txt");
+        fileContent("lastFile.txt");
+        verifyFileDoesNotExist("Directory1/third.txt");
+        verifyFileDoesNotExist("Directory1/second.txt");
+        checkoutHead(3);
+        verifyFileDoesNotExist("lastFile.txt");
+        fileContent("first.txt");
+        fileContent("Directory1/third.txt");
+        fileContent("Directory1/second.txt");
+        status();
+        check("checkoutDifferentArguments.txt");
+    }
+
+    @Test
+    public void testCheckoutFiles() throws Exception {
+        createFile("file.txt", "aaa");
+        checkoutFiles("--", "file1.txt");
+        checkoutFiles("--", "file.txt");
+        fileContent("file.txt");
+        add("file.txt");
+        checkoutFiles("--", "file.txt");
+        fileContent("file.txt");
+        changeFile("file.txt", "some new content");
+        status();
+        checkoutFiles("--", "file.txt");
+        fileContent("file.txt");
+        status();
+        commit("file.txt");
+        changeFile("file.txt", "here we go again");
+        add("file.txt");
+        changeFile("file.txt", "more changes");
+        checkoutFiles("--", "file.txt");
+        fileContent("file.txt");
+        check("checkoutFiles.txt");
+    }
+
+    @Test
     public void testBranches() throws Exception {
         createFileAndCommit("file1.txt", "aaa");
 
@@ -154,7 +423,7 @@ public class GitTest extends AbstractGitTest {
         check("branches.txt");
     }
 
-    //@Test
+    @Test
     public void testBranchRemove() throws Exception {
         createFileAndCommit("file1.txt", "aaa");
         createBranch("develop");

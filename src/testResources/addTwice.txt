@@ -1,0 +1,95 @@
+----------------------------
+Command: init
+Git: Project initialized
+----------------------------
+Create file 'file.txt' with content 'aaa'
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Untracked files:
+	file.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Command: add file.txt
+Git: Files added successfully
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Files staged for commit:
+	New files:
+		file.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Command: add file.txt
+Git: Files added successfully
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Files staged for commit:
+	New files:
+		file.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Command: commit First commit
+Git: New commit 85d5421730acc7ee0f3a6d5269d655ccc3408940 at DATE TIME
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Everything up to date
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Update file 'file.txt' with new content 'changed content'
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Files not staged for commit:
+	Modified files:
+		file.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Command: add file.txt
+Git: Files added successfully
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Files staged for commit:
+	Modified files:
+		file.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Update file 'file.txt' with new content 'more change'
+----------------------------
+Command: add file.txt
+Git: Files added successfully
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Files staged for commit:
+	Modified files:
+		file.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Command: commit First commit
+Git: New commit 1c3c4ea4a161c6d83fe8e836630c80f964790ba4 at DATE TIME
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Everything up to date
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Command: log
+-*-*--*---*----*------Log------*----*---*--*-*-
+* 1c3c4ea4a161c6d83fe8e836630c80f964790ba4 DATE TIME First commit
+* 85d5421730acc7ee0f3a6d5269d655ccc3408940 DATE TIME First commit
+-*-*--*---*----*------Log------*----*---*--*-*-
+----------------------------
+Command: content of file file.txt
+more change

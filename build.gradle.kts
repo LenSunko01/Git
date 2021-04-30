@@ -39,3 +39,9 @@ tasks.compileJava {
 tasks.test {
     useJUnitPlatform()
 }
+
+
+
+application {
+    mainClass.set("ru.itmo.mit.git.Main")
+}

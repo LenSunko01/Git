@@ -1,20 +1,16 @@
 package ru.itmo.mit.git.commands;
 
 import ru.itmo.mit.git.*;
+import ru.itmo.mit.git.context.*;
 
 import java.io.File;
 import java.nio.file.Paths;
 
-public class CheckoutRevisionCommand implements Command {
+public class CheckoutRevisionCommand extends Command {
     private final Revision revision;
-    private final GitObjectManager objectManager = GitObjectManager.getInstance();
-    private final GitCommitHistoryService commitHistoryService = GitCommitHistoryService.getInstance();
-    private final GitFileSystemManager fileSystemManager = GitFileSystemManager.getInstance();
-    private final GitFileUtils fileUtils = GitFileUtils.getInstance();
-    private final GitPathService pathService = GitPathService.getInstance();
 
-
-    public CheckoutRevisionCommand(Revision revision) {
+    public CheckoutRevisionCommand(Context context, Revision revision) {
+        super(context);
         this.revision = revision;
     }
 
@@ -22,14 +18,17 @@ public class CheckoutRevisionCommand implements Command {
     public void execute() throws GitException {
         if (revision.isHeadArgument()) {
             executeHeadArgument(revision.getCount());
+            writer.formattedOutput("Checkout completed successfully");
             return;
         }
         if (revision.isBranchName()) {
             executeBranchNameArgument(revision.getArgument());
+            writer.formattedOutput("Checkout completed successfully");
             return;
         }
         if (revision.isCommitSha()) {
             executeCommitShaArgument(revision.getArgument());
+            writer.formattedOutput("Checkout completed successfully");
             return;
         }
         throw new GitException("Unknown revision");

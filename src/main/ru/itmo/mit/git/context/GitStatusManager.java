@@ -1,5 +1,7 @@
-package ru.itmo.mit.git;
+package ru.itmo.mit.git.context;
 
+import ru.itmo.mit.git.GitConstants;
+import ru.itmo.mit.git.GitException;
 import ru.itmo.mit.git.objects.Tree;
 
 import java.io.File;
@@ -12,11 +14,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class GitStatusManager {
-    private GitStatusManager() {}
-    private static final GitStatusManager instance = new GitStatusManager();
-
-    public static GitStatusManager getInstance() {
-        return instance;
+    private final GitObjectManager objectManager;
+    private final GitPathService pathService;
+    private final GitIndex index;
+    public GitStatusManager(GitObjectManager objectManager, GitPathService pathService, GitIndex index) {
+        this.objectManager = objectManager;
+        this.pathService = pathService;
+        this.index = index;
     }
 
     public class FilesDifference {
@@ -39,6 +43,19 @@ public class GitStatusManager {
 
         public HashSet<String> getFilesPresentOnlyInRightMap() {
             return filesPresentOnlyInRightMap;
+        }
+
+        public boolean areEqual() {
+            if (!filesPresentOnlyInLeftMap.isEmpty()) {
+                return false;
+            }
+            if (!filesPresentOnlyInRightMap.isEmpty()) {
+                return false;
+            }
+            if (!filesPresentInBothDifferentSha.isEmpty()) {
+                return false;
+            }
+            return true;
         }
 
         public FilesDifference(HashMap<String, String> leftMap, HashMap<String, String> rightMap) {
@@ -68,10 +85,23 @@ public class GitStatusManager {
 
     }
 
-    public static HashMap<String, String> getAllFilesOnDisk() throws GitException {
-        var pathService = GitPathService.getInstance();
-        var objectManager = GitObjectManager.getInstance();
+    public GitStatusManager.FilesDifference compareWorkingTreeAndIndex() throws GitException {
+        var filesOnDisk = getAllFilesOnDisk();
+        var filesInIndex = getAllFilesFromTree(index.getRoot(), GitConstants.EMPTY);
+        return getFilesDifference(filesOnDisk, filesInIndex);
+    }
 
+    public GitStatusManager.FilesDifference compareIndexAndHead() throws GitException {
+        var filesInIndex = getAllFilesFromTree(index.getRoot(), GitConstants.EMPTY);
+        var headCommitTreeSha = objectManager.getHeadCommitTreeSha();
+        var filesInHead = new HashMap<String, String>();
+        if (headCommitTreeSha != null) {
+            filesInHead = getAllFilesFromTree(objectManager.getTreeBySha(headCommitTreeSha), GitConstants.EMPTY);
+        }
+        return getFilesDifference(filesInIndex, filesInHead);
+    }
+
+    public HashMap<String, String> getAllFilesOnDisk() throws GitException {
         var fileToSha = new HashMap<String, String>();
         try (Stream<Path> paths = Files.walk(pathService.getPathToGitRepository())) {
             var list = paths
@@ -87,9 +117,8 @@ public class GitStatusManager {
         return fileToSha;
     }
 
-    public static HashMap<String, String> getAllFilesFromTree(Tree root, String currentPath) throws GitException {
+    public HashMap<String, String> getAllFilesFromTree(Tree root, String currentPath) throws GitException {
         var fileToSha = new HashMap<String, String>();
-        var objectManager = GitObjectManager.getInstance();
 
         for (var blob : root.getBlobsShaToName().entrySet()) {
             if (!currentPath.equals(GitConstants.EMPTY)) {

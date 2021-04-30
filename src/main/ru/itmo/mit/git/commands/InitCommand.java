@@ -1,6 +1,7 @@
 package ru.itmo.mit.git.commands;
 
 import ru.itmo.mit.git.*;
+import ru.itmo.mit.git.context.*;
 import ru.itmo.mit.git.objects.Tree;
 
 import java.io.File;
@@ -8,13 +9,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class InitCommand implements Command {
+public class InitCommand extends Command {
+    InitCommand(Context context) {
+        super(context);
+    }
+
     @Override
     public void execute() throws GitException {
-        var pathService = GitPathService.getInstance();
-        var objectManager = GitObjectManager.getInstance();
-        var fileUtils = GitFileUtils.getInstance();
-        var writer = GitWriter.getInstance();
         if (Files.exists(pathService.getPathToGitFolder())) {
             writer.formattedOutput("Already a git repository");
             return;
@@ -35,10 +36,9 @@ public class InitCommand implements Command {
             var indexTree = new Tree();
             objectManager.saveTreeFile(indexTree);
             fileUtils.writeToFile(pathService.getPathToIndexFile(), indexTree.getSha());
-            var gitIndex = GitIndex.getInstance();
-            gitIndex.initialize();
+            index.initialize();
+            writer.formattedOutput("Project initialized");
         } catch (IOException e) {
-            /* maybe delete the directory?*/
             throw new GitException("Exception while creating git folder", e);
         }
     }

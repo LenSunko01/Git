@@ -1,79 +1,64 @@
 ----------------------------
 Command: init
-Project initialized
+Git: Project initialized
 ----------------------------
 Create file 'file1.txt' with content 'aaa'
 ----------------------------
 Create file 'file2.txt' with content 'bbb'
 ----------------------------
 Command: status
-Current branch is 'master'
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
 Untracked files:
-
-New files:
-    file1.txt
-    file2.txt
-
+	file1.txt
+	file2.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: add file1.txt
-Add completed successful
+Git: Files added successfully
 ----------------------------
 Command: add file2.txt
-Add completed successful
+Git: Files added successfully
 ----------------------------
 Command: status
-Current branch is 'master'
-Ready to commit:
-
-New files:
-    file1.txt
-    file2.txt
-
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Files staged for commit:
+	New files:
+		file1.txt
+		file2.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: rm file2.txt
-Rm completed successful
+Git: Rm completed successfully
 ----------------------------
 Command: status
-Current branch is 'master'
-Ready to commit:
-
-New files:
-    file1.txt
-
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
 Untracked files:
-
-New files:
-    file2.txt
-
+	file2.txt
+Files staged for commit:
+	New files:
+		file1.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: commit Add file1.txt
-Files committed
+Git: New commit 7d731d66d70c02b4cf8981876425f2a8c06c0349 at DATE TIME
 ----------------------------
 Command: add file2.txt
-Add completed successful
+Git: Files added successfully
 ----------------------------
 Command: commit Add file2.txt
-Files committed
+Git: New commit 0e65a2c5de2c6bd6e1f5f296d5566d5d5326cf97 at DATE TIME
 ----------------------------
 Command: status
-Current branch is 'master'
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
 Everything up to date
+-*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: log
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-Add file2.txt
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-Add file1.txt
-
-Commit COMMIT_HASH
-Author: Test user
-Date: COMMIT_DATE
-
-Initial commit
+-*-*--*---*----*------Log------*----*---*--*-*-
+* 0e65a2c5de2c6bd6e1f5f296d5566d5d5326cf97 DATE TIME Add file2.txt
+* 7d731d66d70c02b4cf8981876425f2a8c06c0349 DATE TIME Add file1.txt
+-*-*--*---*----*------Log------*----*---*--*-*-
