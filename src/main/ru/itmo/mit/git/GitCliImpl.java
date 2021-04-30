@@ -8,11 +8,11 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.util.*;
 
-public class Git implements GitCli {
+public class GitCliImpl implements GitCli {
     private final CommandFactory factory = CommandFactory.getInstance();
     private final Context context;
     private GitPathService pathService;
-    private GitWriter writer;
+    private GitPrettyPrinter writer;
     private GitCommitHistoryService commitHistoryService;
     private GitObjectManager objectManager;
     private GitIndex index;
@@ -31,20 +31,20 @@ public class Git implements GitCli {
         }
     }
 
-    public Git() throws GitException {
+    public GitCliImpl() throws GitException {
         context = Context.getInstance();
         initialize();
         updateGitIndex();
     }
 
-    public Git(String workingDirectory) throws GitException {
+    public GitCliImpl(String workingDirectory) throws GitException {
         context = Context.getInstance();
         initialize();
         pathService.setPathToGitRepository(workingDirectory);
         updateGitIndex();
     }
 
-    public Git(String workingDirectory, Context context) throws GitException {
+    public GitCliImpl(String workingDirectory, Context context) throws GitException {
         this.context = context;
         initialize();
         pathService.setPathToGitRepository(workingDirectory);
@@ -82,16 +82,20 @@ public class Git implements GitCli {
             writer.formattedOutput("Failed -- LOG requires single revision argument or no argument at all");
             return;
         }
-        if (Objects.equals(commandName, GitConstants.CHECKOUT)
-                && (arguments.size() == 1)
-                && ("--".equals(arguments.get(0)))
-        ) {
-            writer.formattedOutput("Failed -- CHECKOUT -- requires file arguments");
-            return;
-        }
-        if (Objects.equals(commandName, GitConstants.CHECKOUT) && (arguments.size() != 1)) {
-            writer.formattedOutput("Failed -- CHECKOUT requires single revision argument");
-            return;
+        if (Objects.equals(commandName, GitConstants.CHECKOUT)) {
+            if (arguments.size() == 0) {
+                writer.formattedOutput("Failed -- CHECKOUT requires arguments");
+                return;
+            }
+            if (arguments.get(0).equals("--")) {
+                if (arguments.size() == 1) {
+                    writer.formattedOutput("Failed -- CHECKOUT -- requires file arguments");
+                    return;
+                }
+            } else if (arguments.size() != 1){
+                writer.formattedOutput("Failed -- CHECKOUT requires single revision argument");
+                return;
+            }
         }
         if (Objects.equals(commandName, GitConstants.BRANCH_CREATE) && (arguments.size() != 1)) {
             writer.formattedOutput("Failed -- BRANCH-CREATE requires single branch name argument");

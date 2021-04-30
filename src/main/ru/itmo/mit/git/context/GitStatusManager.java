@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -23,18 +24,13 @@ public class GitStatusManager {
         this.index = index;
     }
 
-    public class FilesDifference {
+    public static class FilesDifference {
         private final HashSet<String> filesPresentOnlyInLeftMap;
         private final HashSet<String> filesPresentOnlyInRightMap;
-        private final HashSet<String> filesPresentInBothEqualSha;
         private final HashSet<String> filesPresentInBothDifferentSha;
 
         public HashSet<String> getFilesPresentInBothDifferentSha() {
             return filesPresentInBothDifferentSha;
-        }
-
-        public HashSet<String> getFilesPresentInBothEqualSha() {
-            return filesPresentInBothEqualSha;
         }
 
         public HashSet<String> getFilesPresentOnlyInLeftMap() {
@@ -52,24 +48,19 @@ public class GitStatusManager {
             if (!filesPresentOnlyInRightMap.isEmpty()) {
                 return false;
             }
-            if (!filesPresentInBothDifferentSha.isEmpty()) {
-                return false;
-            }
-            return true;
+            return filesPresentInBothDifferentSha.isEmpty();
         }
 
         public FilesDifference(HashMap<String, String> leftMap, HashMap<String, String> rightMap) {
             filesPresentOnlyInLeftMap = new HashSet<>();
             filesPresentOnlyInRightMap = new HashSet<>();
-            filesPresentInBothEqualSha = new HashSet<>();
             filesPresentInBothDifferentSha = new HashSet<>();
-            for (java.util.Map.Entry<String, String> entry : leftMap.entrySet()) {
+            for (Entry<String, String> entry : leftMap.entrySet()) {
                 var filePath = entry.getKey();
                 var fileSha = entry.getValue();
                 if (rightMap.containsKey(filePath)) {
                     if (rightMap.get(filePath).equals(fileSha)) {
                         rightMap.remove(filePath);
-                        filesPresentInBothEqualSha.add(filePath);
                         continue;
                     }
                     rightMap.remove(filePath);
@@ -105,7 +96,7 @@ public class GitStatusManager {
         var fileToSha = new HashMap<String, String>();
         try (Stream<Path> paths = Files.walk(pathService.getPathToGitRepository())) {
             var list = paths
-                    .filter(file -> !(pathService.fileBelongsToGitFolder(file)) && (new File(file.toString())).isFile())
+                    .filter(file -> !(pathService.fileBelongsToGitFolder(file)) && isFile(file))
                     .collect(Collectors.toList());
             for (var file : list) {
                 var blob = objectManager.createBlobFromFile(new File(file.toString()));
@@ -115,6 +106,10 @@ public class GitStatusManager {
             throw new GitException("Exception while reading HEAD file", e);
         }
         return fileToSha;
+    }
+
+    private boolean isFile(Path file) {
+        return (new File(file.toString())).isFile();
     }
 
     public HashMap<String, String> getAllFilesFromTree(Tree root, String currentPath) throws GitException {

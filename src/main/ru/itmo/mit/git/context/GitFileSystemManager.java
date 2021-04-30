@@ -16,10 +16,13 @@ public class GitFileSystemManager {
     private final GitPathService pathService;
     private final GitIndex index;
     private final GitStatusManager statusManager;
+
     public GitFileSystemManager(
             GitObjectManager objectManager,
             GitPathService pathService,
-            GitIndex index, GitStatusManager statusManager) {
+            GitIndex index,
+            GitStatusManager statusManager
+    ) {
         this.objectManager = objectManager;
         this.pathService = pathService;
         this.index = index;
@@ -40,7 +43,8 @@ public class GitFileSystemManager {
     public boolean updateWorkingTreeFileFromIndex(String filePath) throws GitException {
         var path = Paths.get(filePath);
         try {
-            var blobSha = index.getFileBlobShaByFilePath(pathService.getRelativePath(Paths.get(filePath)).toString());
+            var blobSha = index.getFileBlobShaByFilePath(
+                    pathService.getRelativePath(Paths.get(filePath)).toString());
             if (blobSha == null) {
                 return false;
             }
@@ -56,7 +60,8 @@ public class GitFileSystemManager {
 
     private void updateWorkingTreeByCommit(Commit commit) throws GitException {
         try {
-            var directoryPaths = Files.list(pathService.getPathToGitRepository()).collect(Collectors.toList());
+            var directoryPaths = Files.list(
+                    pathService.getPathToGitRepository()).collect(Collectors.toList());
             for (var file : directoryPaths) {
                 if (pathService.fileBelongsToGitFolder(file)) {
                     continue;
@@ -68,7 +73,7 @@ public class GitFileSystemManager {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new GitException("Exception while updating working tree", e);
         }
 
         var filesInTree = statusManager.getAllFilesFromTree(

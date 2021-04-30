@@ -1,12 +1,10 @@
 package ru.itmo.mit.git.commands;
 
-import ru.itmo.mit.git.*;
-import ru.itmo.mit.git.context.*;
-
-import java.util.HashMap;
+import ru.itmo.mit.git.GitException;
+import ru.itmo.mit.git.context.Context;
 
 public class StatusCommand extends Command {
-    StatusCommand(Context context) {
+    public StatusCommand(Context context) {
         super(context);
     }
 

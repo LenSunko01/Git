@@ -1,7 +1,6 @@
 package ru.itmo.mit.git;
 
 import ru.itmo.mit.git.context.Context;
-import ru.itmo.mit.git.context.GitPathService;
 
 import java.io.File;
 import java.nio.file.Files;

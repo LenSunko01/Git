@@ -4,12 +4,11 @@ import ru.itmo.mit.git.GitException;
 import ru.itmo.mit.git.objects.Commit;
 
 import java.io.PrintStream;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
 
-public class GitWriter {
+public class GitPrettyPrinter {
     private static final String statusString = "-*-*--*---*----*-----Status-----*----*---*--*-*-";
     private static final String untrackedFiles = "Untracked files:";
     private static final String modifiedFiles = "Modified files:";
@@ -27,7 +26,7 @@ public class GitWriter {
         return "\t".repeat(count);
     }
 
-    public GitWriter(GitPathService pathService, GitObjectManager objectManager) {
+    public GitPrettyPrinter(GitPathService pathService, GitObjectManager objectManager) {
         this.pathService = pathService;
         this.objectManager = objectManager;
         outputStream = System.out;
@@ -77,6 +76,53 @@ public class GitWriter {
         outputStream.println(statusString);
         writeCurrentBranch();
         var noFileChanged = true;
+        noFileChanged = printUntrackedFiles(filesUntracked, noFileChanged);
+        noFileChanged = printUnstagedFiles(filesUnstagedModified, filesUnstagedDeleted, noFileChanged);
+        noFileChanged = printStagedFiles(filesStagedNew, filesStagedModified, filesStagedDeleted, noFileChanged);
+        if (noFileChanged) {
+            outputStream.println("Everything up to date");
+        }
+        outputStream.println(statusString);
+    }
+
+    private boolean printStagedFiles(
+            HashSet<String> filesStagedNew,
+            HashSet<String> filesStagedModified,
+            HashSet<String> filesStagedDeleted,
+            boolean noFileChanged
+    ) {
+        if (!(filesStagedModified.isEmpty() && filesStagedDeleted.isEmpty() && filesStagedNew.isEmpty())) {
+            noFileChanged = false;
+            outputStream.println(stagedFiles);
+            printFiles(filesStagedNew, newFiles);
+            printFiles(filesStagedModified, modifiedFiles);
+            printFiles(filesStagedDeleted, deletedFiles);
+        }
+        return noFileChanged;
+    }
+
+    private void printFiles(HashSet<String> files, String title) {
+        if (!files.isEmpty()) {
+            outputStream.print(getIndents(1));
+            outputStream.println(title);
+            for (var file : files) {
+                outputStream.print(getIndents(2));
+                outputStream.println(file);
+            }
+        }
+    }
+
+    private boolean printUnstagedFiles(HashSet<String> filesUnstagedModified, HashSet<String> filesUnstagedDeleted, boolean noFileChanged) {
+        if (!(filesUnstagedModified.isEmpty() && filesUnstagedDeleted.isEmpty())) {
+            noFileChanged = false;
+            outputStream.println(unstagedFiles);
+            printFiles(filesUnstagedModified, modifiedFiles);
+            printFiles(filesUnstagedDeleted, deletedFiles);
+        }
+        return noFileChanged;
+    }
+
+    private boolean printUntrackedFiles(HashSet<String> filesUntracked, boolean noFileChanged) {
         if (!filesUntracked.isEmpty()) {
             noFileChanged = false;
             outputStream.println(untrackedFiles);
@@ -85,58 +131,7 @@ public class GitWriter {
                 outputStream.println(untrackedFile);
             }
         }
-        if (!(filesUnstagedModified.isEmpty() && filesUnstagedDeleted.isEmpty())) {
-            noFileChanged = false;
-            outputStream.println(unstagedFiles);
-            if (!filesUnstagedModified.isEmpty()) {
-                outputStream.print(getIndents(1));
-                outputStream.println(modifiedFiles);
-                for (var unstagedModified : filesUnstagedModified) {
-                    outputStream.print(getIndents(2));
-                    outputStream.println(unstagedModified);
-                }
-            }
-            if (!filesUnstagedDeleted.isEmpty()) {
-                outputStream.print(getIndents(1));
-                outputStream.println(deletedFiles);
-                for (var unstagedDeleted : filesUnstagedDeleted) {
-                    outputStream.print(getIndents(2));
-                    outputStream.println(unstagedDeleted);
-                }
-            }
-        }
-        if (!(filesStagedModified.isEmpty() && filesStagedDeleted.isEmpty() && filesStagedNew.isEmpty())) {
-            noFileChanged = false;
-            outputStream.println(stagedFiles);
-            if (!filesStagedNew.isEmpty()) {
-                outputStream.print(getIndents(1));
-                outputStream.println(newFiles);
-                for (var stagedNew : filesStagedNew) {
-                    outputStream.print(getIndents(2));
-                    outputStream.println(stagedNew);
-                }
-            }
-            if (!filesStagedModified.isEmpty()) {
-                outputStream.print(getIndents(1));
-                outputStream.println(modifiedFiles);
-                for (var stagedModified : filesStagedModified) {
-                    outputStream.print(getIndents(2));
-                    outputStream.println(stagedModified);
-                }
-            }
-            if (!filesStagedDeleted.isEmpty()) {
-                outputStream.print(getIndents(1));
-                outputStream.println(deletedFiles);
-                for (var stagedDeleted : filesStagedDeleted) {
-                    outputStream.print(getIndents(2));
-                    outputStream.println(stagedDeleted);
-                }
-            }
-        }
-        if (noFileChanged) {
-            outputStream.println("Everything up to date");
-        }
-        outputStream.println(statusString);
+        return noFileChanged;
     }
 
     public void setOutputStream(PrintStream printStream) {

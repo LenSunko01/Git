@@ -1,4 +1,4 @@
-package ru.itmo.mit.git.context.test;
+package ru.itmo.mit.git.testContext;
 
 import ru.itmo.mit.git.GitConstants;
 import ru.itmo.mit.git.context.GitDateService;

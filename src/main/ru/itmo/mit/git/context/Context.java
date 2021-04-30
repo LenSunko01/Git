@@ -5,20 +5,9 @@ public class Context {
     public static Context getInstance() {
         return instance;
     }
-    protected Context() {
-        pathService = new GitPathService();
-        fileUtils = new GitFileUtils(pathService);
-        objectManager = new GitObjectManager(fileUtils, pathService);
-        writer = new GitWriter(pathService, objectManager);
-        treeManager = new GitTreeManager(pathService, objectManager);
-        index = new GitIndex(writer, pathService, objectManager, fileUtils, treeManager);
-        statusManager = new GitStatusManager(objectManager, pathService, index);
-        fileSystemManager = new GitFileSystemManager(objectManager, pathService, index, statusManager);
-        commitHistoryService = new GitCommitHistoryService(objectManager);
-        dateService = new GitDateService();
-    }
+
     private final GitIndex index;
-    private final GitWriter writer;
+    private final GitPrettyPrinter writer;
     private final GitPathService pathService;
     private final GitFileUtils fileUtils;
     private final GitObjectManager objectManager;
@@ -27,6 +16,19 @@ public class Context {
     private final GitStatusManager statusManager;
     private final GitDateService dateService;
     private final GitTreeManager treeManager;
+
+    protected Context() {
+        pathService = new GitPathService();
+        fileUtils = new GitFileUtils(pathService);
+        objectManager = new GitObjectManager(fileUtils, pathService);
+        writer = new GitPrettyPrinter(pathService, objectManager);
+        treeManager = new GitTreeManager(pathService, objectManager);
+        index = new GitIndex(writer, pathService, objectManager, fileUtils, treeManager);
+        statusManager = new GitStatusManager(objectManager, pathService, index);
+        fileSystemManager = new GitFileSystemManager(objectManager, pathService, index, statusManager);
+        commitHistoryService = new GitCommitHistoryService(objectManager);
+        dateService = new GitDateService();
+    }
 
     public GitCommitHistoryService getCommitHistoryService() {
         return commitHistoryService;
@@ -49,7 +51,6 @@ public class Context {
     public GitStatusManager getStatusManager() {
         return statusManager;
     }
-    public GitWriter getWriter() { return writer; }
+    public GitPrettyPrinter getWriter() { return writer; }
     public GitDateService getDateService() { return dateService; }
-    public GitTreeManager getTreeManager() { return treeManager; }
 }

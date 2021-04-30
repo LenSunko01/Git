@@ -3,7 +3,7 @@ plugins {
     application
 }
 
-group = "org.example"
+group = "ru.itmo.mit.git"
 version = "1.0-SNAPSHOT"
 
 repositories {

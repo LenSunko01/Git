@@ -8,8 +8,8 @@ import java.util.Date;
 public class GitDateService {
     public GitDateService() {}
     public String getDate() {
-        Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat(GitConstants.dateFormat);
+        var date = new Date();
+        var formatter = new SimpleDateFormat(GitConstants.dateFormat);
         return formatter.format(date);
     }
 }

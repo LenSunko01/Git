@@ -1,19 +1,15 @@
 package ru.itmo.mit.git.objects;
 
-import ru.itmo.mit.git.GitException;
-import ru.itmo.mit.git.context.GitObjectManager;
-import ru.itmo.mit.git.context.GitPathService;
-
-import java.io.File;
 import java.util.TreeMap;
 
 public class Tree extends GitObject {
     private String name = "";
 
-    private TreeMap<String, String> blobsShaToName = new TreeMap<>();
-    private TreeMap<String, String> treesShaToName = new TreeMap<>();
-    private TreeMap<String, String> blobsNameToSha = new TreeMap<>();
-    private TreeMap<String, String> treesNameToSha = new TreeMap<>();
+    private final TreeMap<String, String> blobsShaToName = new TreeMap<>();
+    private final TreeMap<String, String> treesShaToName = new TreeMap<>();
+    private final TreeMap<String, String> blobsNameToSha = new TreeMap<>();
+    private final TreeMap<String, String> treesNameToSha = new TreeMap<>();
+
     public Tree() {
         super("tree");
     }
@@ -57,16 +53,8 @@ public class Tree extends GitObject {
         this.name = name;
     }
 
-    public boolean containsBlobBySha(String sha) {
-        return blobsShaToName.containsKey(sha);
-    }
-
     public boolean containsBlobByName(String name) {
         return blobsNameToSha.containsKey(name);
-    }
-
-    public boolean containsSubTreeBySha(String sha) {
-        return treesShaToName.containsKey(sha);
     }
 
     public boolean containsSubTreeByName(String name) {
@@ -90,10 +78,12 @@ public class Tree extends GitObject {
     public TreeMap<String, String> getTreesShaToName() {
         return treesShaToName;
     }
+
     public void addSubTree(Tree tree) {
         treesShaToName.put(tree.getSha(), tree.getName());
         treesNameToSha.put(tree.getName(), tree.getSha());
     }
+
     public void addSubTree(String sha, String filename) {
         treesShaToName.put(sha, filename);
         treesNameToSha.put(filename, sha);

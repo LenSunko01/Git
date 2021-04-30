@@ -10,7 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class InitCommand extends Command {
-    InitCommand(Context context) {
+    public InitCommand(Context context) {
         super(context);
     }
 

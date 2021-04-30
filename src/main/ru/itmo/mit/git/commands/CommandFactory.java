@@ -22,51 +22,57 @@ public class CommandFactory {
             @NotNull String command,
             @NotNull List<@NotNull String> arguments
     ) throws GitException {
-        if (Objects.equals(command, GitConstants.INIT)) {
-            return new InitCommand(context);
-        }
-        if (Objects.equals(command, GitConstants.ADD)) {
-            return new AddCommand(context, arguments);
-        }
-        if (Objects.equals(command, GitConstants.COMMIT)) {
-            if (arguments.isEmpty()) {
-                return new CommitCommand(context, "");
-            }
-            return new CommitCommand(context, arguments.get(0));
-        }
-        if (Objects.equals(command, GitConstants.RM)) {
-            return new RmCommand(context, arguments);
-        }
-        if (Objects.equals(command, GitConstants.STATUS)) {
-            return new StatusCommand(context);
-        }
-        if (Objects.equals(command, GitConstants.LOG)) {
-            if (arguments.size() == 1) {
+        switch (command) {
+            case GitConstants.INIT:
+                return new InitCommand(context);
+            case GitConstants.ADD:
+                return new AddCommand(context, arguments);
+            case GitConstants.COMMIT:
+                return createCommitCommand(context, arguments);
+            case GitConstants.RM:
+                return new RmCommand(context, arguments);
+            case GitConstants.STATUS:
+                return new StatusCommand(context);
+            case GitConstants.LOG:
+                return createLogCommand(context, arguments);
+            case GitConstants.RESET:
                 var parsedRevision = Revision.parseRevision(context, arguments.get(0));
-                return new LogCommand(context, parsedRevision);
-            }
-            return new LogCommand(context);
-        }
-        if (Objects.equals(command, GitConstants.RESET)) {
-            var parsedRevision = Revision.parseRevision(context, arguments.get(0));
-            return new ResetCommand(context, parsedRevision);
-        }
-        if (Objects.equals(command, GitConstants.CHECKOUT)) {
-            if ("--".equals(arguments.get(0))) {
-                return new CheckoutFileCommand(context, arguments.subList(1, arguments.size()));
-            }
-            var parsedRevision = Revision.parseRevision(context, arguments.get(0));
-            return new CheckoutRevisionCommand(context, parsedRevision);
-        }
-        if (Objects.equals(command, GitConstants.BRANCH_CREATE)) {
-            return new BranchCreateCommand(context, arguments.get(0));
-        }
-        if (Objects.equals(command, GitConstants.BRANCH_REMOVE)) {
-            return new BranchRemoveCommand(context, arguments.get(0));
-        }
-        if (Objects.equals(command, GitConstants.SHOW_BRANCHES)) {
-            return new ShowBranchesCommand(context);
+                return new ResetCommand(context, parsedRevision);
+            case GitConstants.CHECKOUT:
+                return createCheckoutCommand(context, arguments);
+            case GitConstants.BRANCH_CREATE:
+                return new BranchCreateCommand(context, arguments.get(0));
+            case GitConstants.BRANCH_REMOVE:
+                return new BranchRemoveCommand(context, arguments.get(0));
+            case GitConstants.SHOW_BRANCHES:
+                return new ShowBranchesCommand(context);
         }
         throw new GitException("Invalid command name");
+    }
+
+    @NotNull
+    private Command createCheckoutCommand(@NotNull Context context, @NotNull List<@NotNull String> arguments) throws GitException {
+        if ("--".equals(arguments.get(0))) {
+            return new CheckoutFileCommand(context, arguments.subList(1, arguments.size()));
+        }
+        var parsedRevision = Revision.parseRevision(context, arguments.get(0));
+        return new CheckoutRevisionCommand(context, parsedRevision);
+    }
+
+    @NotNull
+    private LogCommand createLogCommand(@NotNull Context context, @NotNull List<@NotNull String> arguments) throws GitException {
+        if (arguments.size() == 1) {
+            var parsedRevision = Revision.parseRevision(context, arguments.get(0));
+            return new LogCommand(context, parsedRevision);
+        }
+        return new LogCommand(context);
+    }
+
+    @NotNull
+    private CommitCommand createCommitCommand(@NotNull Context context, @NotNull List<@NotNull String> arguments) {
+        if (arguments.isEmpty()) {
+            return new CommitCommand(context, "");
+        }
+        return new CommitCommand(context, arguments.get(0));
     }
 }

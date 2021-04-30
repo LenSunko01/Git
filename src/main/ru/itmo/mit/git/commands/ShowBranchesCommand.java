@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class ShowBranchesCommand extends Command {
-    ShowBranchesCommand(Context context) {
+    public ShowBranchesCommand(Context context) {
         super(context);
     }
 

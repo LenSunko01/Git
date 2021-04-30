@@ -8,7 +8,8 @@ import java.nio.file.Files;
 
 public class BranchRemoveCommand extends Command {
     private final String branchName;
-    BranchRemoveCommand(Context context, String branchName) {
+
+    public BranchRemoveCommand(Context context, String branchName) {
         super(context);
         this.branchName = branchName;
     }

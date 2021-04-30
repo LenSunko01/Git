@@ -8,14 +8,14 @@ import java.nio.file.Files;
 
 public class GitIndex {
     private Tree root;
-    private final GitWriter writer;
+    private final GitPrettyPrinter writer;
     private final GitPathService pathService;
     private final GitObjectManager objectManager;
     private final GitFileUtils fileUtils;
     private final GitTreeManager treeManager;
 
     public GitIndex(
-            GitWriter writer,
+            GitPrettyPrinter writer,
             GitPathService pathService,
             GitObjectManager objectManager,
             GitFileUtils fileUtils,

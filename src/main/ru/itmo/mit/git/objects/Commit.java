@@ -21,7 +21,6 @@ public class Commit extends GitObject {
         calculateCommitContent();
     }
 
-    /*tree sha parentCommitSha date message*/
     public void calculateCommitContent() {
         var result = new StringBuilder();
         result.append("tree ").append(getTreeSha()).append(" ");

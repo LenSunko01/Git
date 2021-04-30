@@ -11,9 +11,10 @@ public abstract class Command {
     protected final GitObjectManager objectManager;
     protected final GitPathService pathService;
     protected final GitStatusManager statusManager;
-    protected final GitWriter writer;
+    protected final GitPrettyPrinter writer;
     protected final GitDateService dateService;
-    Command(Context context) {
+
+    public Command(Context context) {
         commitHistoryService = context.getCommitHistoryService();
         fileSystemManager = context.getFileSystemManager();
         fileUtils = context.getFileUtils();

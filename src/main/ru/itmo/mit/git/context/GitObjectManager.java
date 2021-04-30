@@ -22,7 +22,6 @@ public class GitObjectManager {
     private final GitFileUtils fileUtils;
     private final GitPathService pathService;
 
-    /*tree sha parentCommitSha date message*/
     public Commit getCommitBySha(String sha) throws GitException {
         var commitContent = getCommitContentBySha(sha);
         var splitted = Arrays.asList(commitContent.split(" "));
@@ -123,6 +122,10 @@ public class GitObjectManager {
         var directory = Paths.get(pathService.getPathToBlobsFolder() +
                         File.separator + sha.substring(0, 2));
         var filePath = Paths.get(directory + File.separator + sha);
+        writeContentToFile(fileContent, directory, filePath);
+    }
+
+    private void writeContentToFile(String fileContent, Path directory, Path filePath) throws GitException {
         if (!Files.exists(filePath)) {
             try {
                 Files.createDirectories(directory);
@@ -135,8 +138,7 @@ public class GitObjectManager {
     }
 
     public Blob createBlobFromFile(File file) throws GitException {
-        String fileContent;
-        fileContent = fileUtils.readFromFile(file.toPath());
+        var fileContent = fileUtils.readFromFile(file.toPath());
         return new Blob(file.getName(), fileContent);
     }
 
@@ -151,25 +153,16 @@ public class GitObjectManager {
         var directory = Paths.get(pathService.getPathToTreesFolder()
                 + File.separator + sha.substring(0, 2));
         var filePath = Paths.get(directory + File.separator + sha);
-        if (!Files.exists(filePath)) {
-            try {
-                Files.createDirectories(directory);
-                Files.createFile(filePath);
-                fileUtils.writeToFile(filePath, tree.getContent());
-            } catch (Exception e) {
-                throw new GitException("Exception while creating a file", e);
-            }
-        }
+        writeContentToFile(tree.getContent(), directory, filePath);
     }
 
     public Tree getIndexTree() throws GitException {
-        String sha;
         try {
-            sha = Files.lines(pathService.getPathToIndexFile()).collect(Collectors.joining());
+            var sha = Files.lines(pathService.getPathToIndexFile()).collect(Collectors.joining());
+            return getTreeBySha(sha);
         } catch (IOException e) {
             throw new GitException("Exception while reading from file", e);
         }
-        return getTreeBySha(sha);
     }
 
     public void saveCommitFile(Commit commit) throws GitException {
@@ -177,14 +170,6 @@ public class GitObjectManager {
         var directory = Paths.get(pathService.getPathToCommitsFolder()
                 + File.separator + sha.substring(0, 2));
         var filePath = Paths.get(directory + File.separator + sha);
-        if (!Files.exists(filePath)) {
-            try {
-                Files.createDirectories(directory);
-                Files.createFile(filePath);
-                fileUtils.writeToFile(filePath, commit.getContent());
-            } catch (IOException e) {
-                throw new GitException("Exception while creating a file", e);
-            }
-        }
+        writeContentToFile(commit.getContent(), directory, filePath);
     }
 }

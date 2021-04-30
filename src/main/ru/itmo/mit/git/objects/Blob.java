@@ -1,7 +1,7 @@
 package ru.itmo.mit.git.objects;
 
 public class Blob extends GitObject {
-    private String name;
+    private final String name;
 
     public Blob(String name, String content) {
         super("blob", content);

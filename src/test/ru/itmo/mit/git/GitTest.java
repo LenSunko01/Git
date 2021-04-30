@@ -1,7 +1,7 @@
 package ru.itmo.mit.git;
 
 import org.junit.jupiter.api.Test;
-import ru.itmo.mit.git.context.test.ContextTest;
+import ru.itmo.mit.git.testContext.ContextTest;
 
 /*
  * Т.к. в коммитах при каждом новом запуске получаются разные хеши и
@@ -11,9 +11,9 @@ import ru.itmo.mit.git.context.test.ContextTest;
 public class GitTest extends AbstractGitTest {
     @Override
     protected GitCli createCli(String workingDir) {
-        Git git = null;
+        GitCliImpl git = null;
         try {
-            git = new Git(workingDir, new ContextTest());
+            git = new GitCliImpl(workingDir, ContextTest.getInstance());
         } catch (GitException e) {
             e.printStackTrace();
         }

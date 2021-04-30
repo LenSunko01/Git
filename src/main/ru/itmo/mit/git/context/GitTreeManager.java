@@ -15,10 +15,10 @@ public class GitTreeManager {
     }
 
     public void deleteFileFromTree(Tree tree, String filePath) throws GitException {
-        deleteFileFromTree(filePath, tree, new File(pathService.getFullPath(filePath).toString()));
+        deleteFileFromTree(filePath, tree);
     }
 
-    private Tree deleteFileFromTree(String filePath, Tree tree, File file) throws GitException {
+    private Tree deleteFileFromTree(String filePath, Tree tree) throws GitException {
         var pathTokens = pathService.getPathTokens(filePath);
         var token = pathTokens.get(0);
         if (pathTokens.size() > 1) {
@@ -28,14 +28,14 @@ public class GitTreeManager {
                 var subTree = objectManager.getTreeBySha(subTreeSha);
                 subTree.setName(token);
                 tree.removeSubTree(subTree);
-                var newSubTree = deleteFileFromTree(filePath.substring(currentPrefix.length()), subTree, file);
+                var newSubTree = deleteFileFromTree(filePath.substring(currentPrefix.length()), subTree);
                 if (newSubTree != null) {
                     newSubTree.setName(token);
                     tree.addSubTree(newSubTree);
                 }
             } else {
                 var subTree = new Tree();
-                var newSubTree = deleteFileFromTree(filePath.substring(currentPrefix.length()), subTree, file);
+                var newSubTree = deleteFileFromTree(filePath.substring(currentPrefix.length()), subTree);
                 if (newSubTree != null) {
                     newSubTree.setName(token);
                     tree.addSubTree(newSubTree);

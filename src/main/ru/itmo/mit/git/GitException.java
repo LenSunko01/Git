@@ -2,8 +2,7 @@ package ru.itmo.mit.git;
 
 public class GitException extends Exception {
 
-    public GitException() {
-    }
+    public GitException() {}
 
     public GitException(String message) {
         super(message);
