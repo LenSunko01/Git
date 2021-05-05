@@ -18,6 +18,7 @@ public class GitPathService {
     private Path pathToBlobsFolder;
     private Path pathToTreesFolder;
     private Path pathToCommitsFolder;
+    private Path pathToLaunchScript;
 
     public GitPathService() {
         pathToGitRepository = Paths.get(System.getProperty("user.dir"));
@@ -34,6 +35,7 @@ public class GitPathService {
                 File.separator + gitHeadsFolderName);
         pathToHeadFile = Paths.get(pathToGitFolder + File.separator + gitHeadFileName);
         pathToIndexFile = Paths.get(pathToGitFolder + File.separator + gitIndexFileName);
+        pathToLaunchScript = getFullPath(launchScript);
     }
 
     public void setPathToGitRepository(String path) {
@@ -78,12 +80,11 @@ public class GitPathService {
     }
 
     public List<String> getPathTokens(String filePath) {
-        return Arrays.asList(filePath.split(File.separator));
+        return Arrays.asList(patternSeparator.split(filePath));
     }
 
     public Path getPathToTreeBySha(String sha) {
-        return Paths.get(pathToTreesFolder + File.separator + sha.substring(0, 2)
-                + File.separator + sha);
+        return GitObjectManager.getFullPathToFileBySha(pathToTreesFolder, sha);
     }
 
     public Path getFullPath(String path) {
@@ -91,8 +92,7 @@ public class GitPathService {
     }
 
     public Path getPathToBlobBySha(String sha) {
-        return Paths.get(pathToBlobsFolder + File.separator + sha.substring(0, 2)
-                + File.separator + sha);
+        return GitObjectManager.getFullPathToFileBySha(pathToBlobsFolder, sha);
     }
 
     public String getBranchNameFromPath(Path path) {
@@ -109,5 +109,13 @@ public class GitPathService {
 
     public Path getPathToBranchByName(String branchName) {
         return Paths.get(pathToHeadsFolder + File.separator + branchName);
+    }
+
+    public boolean fileIsLaunchScript(Path path) {
+        return path.startsWith(pathToLaunchScript);
+    }
+
+    public boolean fileIsGitRepository(Path path) {
+        return path.equals(pathToGitRepository);
     }
 }

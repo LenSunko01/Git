@@ -62,7 +62,9 @@ Git: Reset completed successfully
 Command: status
 -*-*--*---*----*-----Status-----*----*---*--*-*-
 Currently at branch master
-Everything up to date
+Untracked files:
+	Directory1/third.txt
+	Directory1/second.txt
 -*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: content of file lastFile.txt
@@ -74,6 +76,13 @@ bbb
 Command: reset 023640779f4c4320aa106dcdcb9344cffb85b5bc
 Git: Reset completed successfully
 ----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Untracked files:
+	Directory1/third.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
 Command: content of file first.txt
 aaa
 ----------------------------
@@ -83,5 +92,6 @@ hello
 Command: status
 -*-*--*---*----*-----Status-----*----*---*--*-*-
 Currently at branch master
-Everything up to date
+Untracked files:
+	Directory1/third.txt
 -*-*--*---*----*-----Status-----*----*---*--*-*-

@@ -54,59 +54,25 @@ public class GitCliImpl implements GitCli {
     @Override
     public void runCommand(@NotNull String commandName, @NotNull List<@NotNull String> arguments) throws GitException {
         var writer = context.getWriter();
-        if (Objects.equals(commandName, GitConstants.INIT) && !arguments.isEmpty()) {
-            writer.formattedOutput("Failed -- INIT does not require any arguments");
-            return;
-        }
-        if (Objects.equals(commandName, GitConstants.ADD) && arguments.isEmpty()) {
-            writer.formattedOutput("Failed -- ADD requires file arguments");
-            return;
-        }
-        if (Objects.equals(commandName, GitConstants.RM) && arguments.isEmpty()) {
-            writer.formattedOutput("Failed -- RM requires file arguments");
-            return;
-        }
-        if (Objects.equals(commandName, GitConstants.STATUS) && !arguments.isEmpty()) {
-            writer.formattedOutput("Failed -- STATUS does not require any arguments");
-            return;
-        }
-        if (Objects.equals(commandName, GitConstants.COMMIT) && (arguments.size() > 1)) {
-            writer.formattedOutput("Failed -- COMMIT requires single message or not message at all");
-            return;
-        }
-        if (Objects.equals(commandName, GitConstants.RESET) && (arguments.size() != 1)) {
-            writer.formattedOutput("Failed -- RESET requires single revision argument");
-            return;
-        }
-        if (Objects.equals(commandName, GitConstants.LOG) && (arguments.size() > 1)) {
-            writer.formattedOutput("Failed -- LOG requires single revision argument or no argument at all");
-            return;
-        }
-        if (Objects.equals(commandName, GitConstants.CHECKOUT)) {
-            if (arguments.size() == 0) {
-                writer.formattedOutput("Failed -- CHECKOUT requires arguments");
-                return;
+        if (Objects.equals(commandName, GitConstants.HELP)) {
+            if (!arguments.isEmpty()) {
+                throw new GitException("Failed -- HELP requires no arguments");
+            } else {
+                writer.output("-----> List of all commands");
+                writer.output("./gitCli.sh help");
+                writer.output("./gitCli.sh init");
+                writer.output("./gitCli.sh add <files>");
+                writer.output("./gitCli.sh rm <files>");
+                writer.output("./gitCli.sh status");
+                writer.output("./gitCli.sh commit <message>");
+                writer.output("./gitCli.sh reset <to_revision>");
+                writer.output("./gitCli.sh log <from_revision>");
+                writer.output("./gitCli.sh checkout <revision>");
+                writer.output("./gitCli.sh checkout -- <files>");
+                writer.output("./gitCli.sh branch-create <branch>");
+                writer.output("./gitCli.sh branch-remove <branch>");
+                writer.output("./gitCli.sh show-branches");
             }
-            if (arguments.get(0).equals("--")) {
-                if (arguments.size() == 1) {
-                    writer.formattedOutput("Failed -- CHECKOUT -- requires file arguments");
-                    return;
-                }
-            } else if (arguments.size() != 1){
-                writer.formattedOutput("Failed -- CHECKOUT requires single revision argument");
-                return;
-            }
-        }
-        if (Objects.equals(commandName, GitConstants.BRANCH_CREATE) && (arguments.size() != 1)) {
-            writer.formattedOutput("Failed -- BRANCH-CREATE requires single branch name argument");
-            return;
-        }
-        if (Objects.equals(commandName, GitConstants.BRANCH_REMOVE) && (arguments.size() != 1)) {
-            writer.formattedOutput("Failed -- BRANCH-REMOVE requires single branch name argument");
-            return;
-        }
-        if (Objects.equals(commandName, GitConstants.SHOW_BRANCHES) && !arguments.isEmpty()) {
-            writer.formattedOutput("Failed -- SHOW-BRANCHES requires single branch name argument");
             return;
         }
         var command = factory.createCommand(context, commandName, arguments);

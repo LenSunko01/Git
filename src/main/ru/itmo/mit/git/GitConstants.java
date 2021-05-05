@@ -2,6 +2,9 @@ package ru.itmo.mit.git;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
+import java.util.regex.Pattern;
+
 public final class GitConstants {
     private GitConstants() {}
 
@@ -17,22 +20,32 @@ public final class GitConstants {
     public static final @NotNull String BRANCH_REMOVE = "branch-remove";
     public static final @NotNull String SHOW_BRANCHES = "show-branches";
     public static final @NotNull String MERGE = "merge";
+    public static final @NotNull String HELP = "help";
 
     public static final @NotNull String MASTER = "master";
 
-    public final static String gitPrimeFolderName = "gitImpl";
-    public final static String gitObjectsFolderName = "objects";
-    public final static String gitRefsFolderName = "refs";
-    public final static String gitHeadFileName = "HEAD";
-    public final static String gitHeadsFolderName = "heads";
-    public final static String gitBlobsFolderName = "blobs";
-    public final static String gitTreesFolderName = "trees";
-    public final static String gitCommitsFolderName = "commits";
-    public final static String gitIndexFileName = "index";
+    public static final String launchScript = "gitCli.sh";
+    public static final String gitPrimeFolderName = "gitImpl";
+    public static final String gitObjectsFolderName = "objects";
+    public static final String gitRefsFolderName = "refs";
+    public static final String gitHeadFileName = "HEAD";
+    public static final String gitHeadsFolderName = "heads";
+    public static final String gitBlobsFolderName = "blobs";
+    public static final String gitTreesFolderName = "trees";
+    public static final String gitCommitsFolderName = "commits";
+    public static final String gitIndexFileName = "index";
 
-    public final static String EMPTY = "";
-    public final static String revisionHeadPrefix = "HEAD~";
-    public final static String dateFormat = "dd-MM-yyyy HH:mm:ss";
-    public final static String COMMIT_DATE = "DATE TIME";
-    public final static String COMMIT_HASH = "COMMIT_HASH";
+    public static final String EMPTY = "";
+    public static final String revisionHeadPrefix = "HEAD~";
+    public static final String dateFormat = "dd-MM-yyyy HH:mm:ss";
+    public static final String COMMIT_DATE = "DATE TIME";
+    public static final String headCommitBranchPrefix = "branch ";
+    public static final String headCommitDetachedPrefix = "detached ";
+
+    public static final String blob = "blob";
+    public static final String tree = "tree";
+    public static final String commit = "commit";
+
+    public static final Pattern patternSpace = Pattern.compile(" ");
+    public static final Pattern patternSeparator = Pattern.compile(File.separator);
 }

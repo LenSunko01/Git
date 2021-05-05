@@ -275,11 +275,9 @@ public class GitTest extends AbstractGitTest {
         status();
         fileContent("lastFile.txt");
         fileContent("first.txt");
-        verifyFileDoesNotExist("Directory1/third.txt");
-        verifyFileDoesNotExist("Directory1/second.txt");
         resetCommitHash("023640779f4c4320aa106dcdcb9344cffb85b5bc");
+        status();
         verifyFileDoesNotExist("lastFile.txt");
-        verifyFileDoesNotExist("Directory1/third.txt");
         fileContent("first.txt");
         fileContent("Directory1/second.txt");
         status();
@@ -290,17 +288,14 @@ public class GitTest extends AbstractGitTest {
     public void testResetHead() throws Exception {
         createCommitHistory();
         log();
+        status();
         resetHead(1);
         status();
         fileContent("first.txt");
-        verifyFileDoesNotExist("Directory1/third.txt");
-        verifyFileDoesNotExist("Directory1/second.txt");
         verifyFileDoesNotExist("lastFile.txt");
         resetHead(3);
         status();
         fileContent("first.txt");
-        verifyFileDoesNotExist("Directory1/third.txt");
-        verifyFileDoesNotExist("Directory1/second.txt");
         verifyFileDoesNotExist("lastFile.txt");
         check("resetHead.txt");
     }
@@ -317,9 +312,7 @@ public class GitTest extends AbstractGitTest {
         resetBranch("master");
         status();
         verifyFileDoesNotExist("helloFile.txt");
-        verifyFileDoesNotExist("worldFile.txt");
-        verifyFileDoesNotExist("Directory1/third.txt");
-        verifyFileDoesNotExist("Directory1/second.txt");
+        verifyFileExists("worldFile.txt");
         fileContent("lastFile.txt");
         check("resetMasterBranch.txt");
     }
@@ -342,29 +335,24 @@ public class GitTest extends AbstractGitTest {
     public void testCheckoutDifferentArguments() throws Exception {
         createCommitHistory();
         log();
+        status();
         checkoutCommitHash("d4d1970bff6309f9493f75773ea21e68b3878707");
         status();
         fileContent("lastFile.txt");
         fileContent("first.txt");
-        verifyFileDoesNotExist("Directory1/third.txt");
-        verifyFileDoesNotExist("Directory1/second.txt");
         checkoutCommitHash("023640779f4c4320aa106dcdcb9344cffb85b5bc");
         verifyFileDoesNotExist("lastFile.txt");
-        verifyFileDoesNotExist("Directory1/third.txt");
         fileContent("first.txt");
         fileContent("Directory1/second.txt");
         status();
         checkoutCommitHash("af7673250c3ca59d8c28a10c7f71258ba0f34cad");
+        status();
         fileContent("first.txt");
-        verifyFileDoesNotExist("Directory1/third.txt");
-        verifyFileDoesNotExist("Directory1/second.txt");
         verifyFileDoesNotExist("lastFile.txt");
         checkoutMaster();
         status();
         fileContent("first.txt");
         fileContent("lastFile.txt");
-        verifyFileDoesNotExist("Directory1/third.txt");
-        verifyFileDoesNotExist("Directory1/second.txt");
         checkoutHead(3);
         verifyFileDoesNotExist("lastFile.txt");
         fileContent("first.txt");
@@ -435,5 +423,14 @@ public class GitTest extends AbstractGitTest {
         showBranches();
 
         check("branchRemove.txt");
+    }
+
+    @Test
+    public void testCommitMessage() throws Exception {
+        createFile("file.txt", "Initial commit");
+        add("file.txt");
+        status();
+        commit("Initial", "commit");
+        check("commitMessage.txt");
     }
 }

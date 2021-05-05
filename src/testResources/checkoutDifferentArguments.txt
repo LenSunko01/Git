@@ -56,13 +56,23 @@ Command: log
 * d11d33f41ce7a8d7871c2166e45c6ad72138e81f DATE TIME Add first.txt
 -*-*--*---*----*------Log------*----*---*--*-*-
 ----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Untracked files:
+	Directory1/third.txt
+	Directory1/second.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
 Command: checkout d4d1970bff6309f9493f75773ea21e68b3878707
 Git: Checkout completed successfully
 ----------------------------
 Command: status
 -*-*--*---*----*-----Status-----*----*---*--*-*-
 Currently in detached HEAD state at: d4d1970bff6309f9493f75773ea21e68b3878707
-Everything up to date
+Untracked files:
+	Directory1/third.txt
+	Directory1/second.txt
 -*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: content of file lastFile.txt
@@ -83,11 +93,19 @@ hello
 Command: status
 -*-*--*---*----*-----Status-----*----*---*--*-*-
 Currently in detached HEAD state at: 023640779f4c4320aa106dcdcb9344cffb85b5bc
-Everything up to date
+Untracked files:
+	Directory1/third.txt
 -*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: checkout af7673250c3ca59d8c28a10c7f71258ba0f34cad
 Git: Checkout completed successfully
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently in detached HEAD state at: af7673250c3ca59d8c28a10c7f71258ba0f34cad
+Untracked files:
+	Directory1/third.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: content of file first.txt
 bbb
@@ -98,7 +116,8 @@ Git: Checkout completed successfully
 Command: status
 -*-*--*---*----*-----Status-----*----*---*--*-*-
 Currently at branch master
-Everything up to date
+Untracked files:
+	Directory1/third.txt
 -*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: content of file first.txt

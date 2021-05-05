@@ -16,44 +16,18 @@ public class CheckoutRevisionCommand extends Command {
 
     @Override
     public void execute() throws GitException {
-        if (revision.isHeadArgument()) {
-            executeHeadArgument(revision.getCount());
-            writer.formattedOutput("Checkout completed successfully");
-            return;
+        var sha = revision.getCommitSha();
+        if (sha.isEmpty()) {
+            throw new GitException("Unknown revision");
         }
+        var commit = objectManager.getCommitBySha(sha);
+        fileSystemManager.updateFileSystemByCommit(commit);
         if (revision.isBranchName()) {
-            executeBranchNameArgument(revision.getArgument());
+            fileUtils.writeBranchToHeadFile(pathService.getPathToHeadsFolder() + File.separator + revision.getArgument());
             writer.formattedOutput("Checkout completed successfully");
             return;
         }
-        if (revision.isCommitSha()) {
-            executeCommitShaArgument(revision.getArgument());
-            writer.formattedOutput("Checkout completed successfully");
-            return;
-        }
-        throw new GitException("Unknown revision");
-    }
-
-    private void executeCommitShaArgument(String commitSha) throws GitException {
-        var commit = objectManager.getCommitBySha(commitSha);
-        fileSystemManager.updateFileSystemByCommit(commit);
-        fileUtils.writeDetachedToHeadFile(commitSha);
-    }
-
-    private void executeBranchNameArgument(String branchName) throws GitException {
-        var path = Paths.get(pathService.getPathToHeadsFolder() + File.separator + branchName);
-        var commitSha = fileUtils.readFromFile(path);
-        var commit = objectManager.getCommitBySha(commitSha);
-        fileSystemManager.updateFileSystemByCommit(commit);
-        fileUtils.writeBranchToHeadFile(pathService.getPathToHeadsFolder() + File.separator + branchName);
-    }
-
-    private void executeHeadArgument(int count) throws GitException {
-        var currentCommitSha = objectManager.getHeadCommitSha();
-        if (currentCommitSha.isEmpty()) {
-            return;
-        }
-        var commit = commitHistoryService.getParentCommit(currentCommitSha, count);
-        executeCommitShaArgument(commit.getSha());
+        fileUtils.writeDetachedToHeadFile(sha);
+        writer.formattedOutput("Checkout completed successfully");
     }
 }

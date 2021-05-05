@@ -86,7 +86,10 @@ Git: Reset completed successfully
 Command: status
 -*-*--*---*----*-----Status-----*----*---*--*-*-
 Currently at branch master
-Everything up to date
+Untracked files:
+	Directory1/third.txt
+	worldFile.txt
+	Directory1/second.txt
 -*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: content of file lastFile.txt

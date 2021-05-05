@@ -96,7 +96,9 @@ public class GitStatusManager {
         var fileToSha = new HashMap<String, String>();
         try (Stream<Path> paths = Files.walk(pathService.getPathToGitRepository())) {
             var list = paths
-                    .filter(file -> !(pathService.fileBelongsToGitFolder(file)) && isFile(file))
+                    .filter(file -> !(pathService.fileBelongsToGitFolder(file))
+                            && isFile(file)
+                            && !(pathService.fileIsLaunchScript(file)))
                     .collect(Collectors.toList());
             for (var file : list) {
                 var blob = objectManager.createBlobFromFile(new File(file.toString()));

@@ -1,0 +1,19 @@
+----------------------------
+Command: init
+Git: Project initialized
+----------------------------
+Create file 'file.txt' with content 'Initial commit'
+----------------------------
+Command: add file.txt
+Git: Files added successfully
+----------------------------
+Command: status
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+Currently at branch master
+Files staged for commit:
+	New files:
+		file.txt
+-*-*--*---*----*-----Status-----*----*---*--*-*-
+----------------------------
+Command: commit Initial commit
+Git: New commit 920e8fc2740a30b45ba0215ed68a9084b50d49ec at DATE TIME

@@ -137,6 +137,10 @@ public abstract class AbstractGitTest {
         assert(!Files.exists(Paths.get(projectDir + File.separator + fileName)));
     }
 
+    protected void verifyFileExists(@NotNull String fileName) {
+        assert(Files.exists(Paths.get(projectDir + File.separator + fileName)));
+    }
+
     protected void init() throws GitException {
         runCommand(GitConstants.INIT);
     }
@@ -159,6 +163,10 @@ public abstract class AbstractGitTest {
     // git commit message
     protected void commit(String message) throws GitException {
         runCommand(GitConstants.COMMIT, message);
+    }
+
+    protected void commit(String... args) throws GitException {
+        runCommand(GitConstants.COMMIT, args);
     }
 
     protected void resetCommitHash(String hash) throws GitException {

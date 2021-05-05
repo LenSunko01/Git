@@ -1,19 +1,20 @@
 package ru.itmo.mit.git.objects;
 
 import ru.itmo.mit.git.GitConstants;
+import ru.itmo.mit.git.GitException;
 
 public class Commit extends GitObject {
     private String message = "";
     private final String date;
     private String parentCommitSha = "";
     private String treeSha = "";
-    public Commit(String date) {
-        super("commit");
+    public Commit(String date) throws GitException {
+        super(Type.commit);
         this.date = date;
     }
 
-    public Commit(String date, String treeSha, String parentCommitSha, String message) {
-        super("commit");
+    public Commit(String date, String treeSha, String parentCommitSha, String message) throws GitException {
+        super(Type.commit);
         this.date = date;
         this.treeSha = treeSha;
         this.parentCommitSha = parentCommitSha;
@@ -23,7 +24,7 @@ public class Commit extends GitObject {
 
     public void calculateCommitContent() {
         var result = new StringBuilder();
-        result.append("tree ").append(getTreeSha()).append(" ");
+        result.append(GitConstants.tree).append(" ").append(getTreeSha()).append(" ");
         if (!(getParentCommitSha().equals(GitConstants.EMPTY))) {
             result.append(getParentCommitSha()).append(" ");
         }

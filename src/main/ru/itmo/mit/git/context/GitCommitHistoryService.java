@@ -3,7 +3,7 @@ package ru.itmo.mit.git.context;
 import ru.itmo.mit.git.GitException;
 import ru.itmo.mit.git.objects.Commit;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class GitCommitHistoryService {
@@ -28,7 +28,7 @@ public class GitCommitHistoryService {
     }
 
     public List<Commit> getCommitHistoryInclusive(String sha) throws GitException {
-        var list = new ArrayList<Commit>();
+        var list = new LinkedList<Commit>();
         if (sha.isEmpty()) {
             return list;
         }

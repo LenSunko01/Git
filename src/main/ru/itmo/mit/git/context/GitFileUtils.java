@@ -1,5 +1,6 @@
 package ru.itmo.mit.git.context;
 
+import ru.itmo.mit.git.GitConstants;
 import ru.itmo.mit.git.GitException;
 
 import java.io.FileWriter;
@@ -15,7 +16,7 @@ public class GitFileUtils {
     }
 
     public void writeBranchToHeadFile(String branch) throws GitException {
-        writeToFile(pathService.getPathToHeadFile(), "branch " + branch);
+        writeToFile(pathService.getPathToHeadFile(), GitConstants.headCommitBranchPrefix + branch);
     }
 
     public void writeToFile(Path path, String statement) throws GitException {
@@ -35,6 +36,6 @@ public class GitFileUtils {
     }
 
     public void writeDetachedToHeadFile(String newCommitSha) throws GitException {
-        writeToFile(pathService.getPathToHeadFile(), "detached " + newCommitSha);
+        writeToFile(pathService.getPathToHeadFile(), GitConstants.headCommitDetachedPrefix + newCommitSha);
     }
 }

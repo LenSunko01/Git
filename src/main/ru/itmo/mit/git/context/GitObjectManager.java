@@ -44,14 +44,21 @@ public class GitObjectManager {
         return new Commit(date, treeSha, parentCommitSha, message);
     }
 
+    public static Path getPathToFolderBySha(Path directory, String sha) {
+        return Paths.get(directory + File.separator + sha.substring(0, 2));
+    }
+
+    public static Path getFullPathToFileBySha(Path directory, String sha) {
+        return Paths.get(getPathToFolderBySha(directory, sha)+ File.separator + sha);
+    }
+
     public String getCommitContentBySha(String sha) throws GitException {
-        return fileUtils.readFromFile(Paths.get(pathService.getPathToCommitsFolder() + File.separator +
-                sha.substring(0,2) + File.separator + sha));
+        return fileUtils.readFromFile(getFullPathToFileBySha(pathService.getPathToCommitsFolder(), sha));
     }
 
     public boolean isDetachedHead() throws GitException {
         var headContent = fileUtils.readFromFile(pathService.getPathToHeadFile());
-        return !headContent.startsWith("branch ");
+        return !headContent.startsWith(GitConstants.headCommitBranchPrefix);
     }
 
     public String getHeadBranchName() throws GitException {
@@ -61,19 +68,19 @@ public class GitObjectManager {
 
     public String getHeadBranchRelativePath() throws GitException {
         var headContent = fileUtils.readFromFile(pathService.getPathToHeadFile());
-        if (headContent.startsWith("branch ")) {
-            return headContent.substring("branch ".length());
+        if (headContent.startsWith(GitConstants.headCommitBranchPrefix)) {
+            return headContent.substring(GitConstants.headCommitBranchPrefix.length());
         }
         throw new GitException("No branch in detached HEAD state");
     }
 
     public String getHeadCommitSha() throws GitException {
         var headContent = fileUtils.readFromFile(pathService.getPathToHeadFile());
-        if (headContent.startsWith("branch ")) {
-            var path = headContent.substring("branch ".length());
+        if (headContent.startsWith(GitConstants.headCommitBranchPrefix)) {
+            var path = headContent.substring(GitConstants.headCommitBranchPrefix.length());
             return fileUtils.readFromFile(Paths.get(path));
         }
-        return headContent.substring("detached ".length());
+        return headContent.substring(GitConstants.headCommitDetachedPrefix.length());
     }
 
     public String getHeadCommitTreeSha() throws GitException {
@@ -81,19 +88,18 @@ public class GitObjectManager {
         if (headCommitSha.isEmpty()) {
             return null;
         }
-        var commitContent = fileUtils.readFromFile(Paths.get(pathService.getPathToCommitsFolder() + File.separator +
-                        headCommitSha.substring(0,2) + File.separator + headCommitSha));
+        var commitContent = getCommitContentBySha(headCommitSha);
         if (commitContent.isEmpty()) {
             return null;
         }
-        return Arrays.asList(commitContent.split(" ")).get(1);
+        return Arrays.asList(GitConstants.patternSpace.split(commitContent)).get(1);
     }
 
     private void parseTreeLine(String line, Tree root) {
-        var splitted = Arrays.asList(line.split(" "));
+        var splitted = Arrays.asList(GitConstants.patternSpace.split(line));
         var sha = splitted.get(1);
         var filename = String.join("", splitted.subList(2, splitted.size()));
-        if ("blob".equals(splitted.get(0))) {
+        if (GitConstants.blob.equals(splitted.get(0))) {
             root.addBlob(sha, filename);
         } else {
             root.addSubTree(sha, filename);
@@ -119,9 +125,8 @@ public class GitObjectManager {
     private void saveBlobFile(Blob blob) throws GitException {
         var sha = blob.getSha();
         var fileContent = blob.getContent();
-        var directory = Paths.get(pathService.getPathToBlobsFolder() +
-                        File.separator + sha.substring(0, 2));
-        var filePath = Paths.get(directory + File.separator + sha);
+        var directory = getPathToFolderBySha(pathService.getPathToBlobsFolder(), sha);
+        var filePath = getFullPathToFileBySha(pathService.getPathToBlobsFolder(), sha);
         writeContentToFile(fileContent, directory, filePath);
     }
 
@@ -150,9 +155,8 @@ public class GitObjectManager {
 
     public void saveTreeFile(Tree tree) throws GitException {
         var sha = tree.getSha();
-        var directory = Paths.get(pathService.getPathToTreesFolder()
-                + File.separator + sha.substring(0, 2));
-        var filePath = Paths.get(directory + File.separator + sha);
+        var directory = getPathToFolderBySha(pathService.getPathToTreesFolder(), sha);
+        var filePath = getFullPathToFileBySha(pathService.getPathToTreesFolder(), sha);
         writeContentToFile(tree.getContent(), directory, filePath);
     }
 
@@ -167,9 +171,8 @@ public class GitObjectManager {
 
     public void saveCommitFile(Commit commit) throws GitException {
         var sha = commit.getSha();
-        var directory = Paths.get(pathService.getPathToCommitsFolder()
-                + File.separator + sha.substring(0, 2));
-        var filePath = Paths.get(directory + File.separator + sha);
+        var directory = getPathToFolderBySha(pathService.getPathToCommitsFolder(), sha);
+        var filePath = getFullPathToFileBySha(pathService.getPathToCommitsFolder(), sha);
         writeContentToFile(commit.getContent(), directory, filePath);
     }
 }

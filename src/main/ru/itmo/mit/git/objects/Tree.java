@@ -1,5 +1,8 @@
 package ru.itmo.mit.git.objects;
 
+import ru.itmo.mit.git.GitConstants;
+import ru.itmo.mit.git.GitException;
+
 import java.util.TreeMap;
 
 public class Tree extends GitObject {
@@ -10,18 +13,18 @@ public class Tree extends GitObject {
     private final TreeMap<String, String> blobsNameToSha = new TreeMap<>();
     private final TreeMap<String, String> treesNameToSha = new TreeMap<>();
 
-    public Tree() {
-        super("tree");
+    public Tree() throws GitException {
+        super(Type.tree);
     }
 
     public void updateTreeContent() {
         var entries = new StringBuilder();
         for (var blobEntry : getBlobsShaToName().entrySet()) {
-            entries.append("blob ").append(blobEntry.getKey())
+            entries.append(GitConstants.blob).append(" ").append(blobEntry.getKey())
                     .append(' ').append(blobEntry.getValue()).append(System.lineSeparator());
         }
         for (var treeEntry : getTreesShaToName().entrySet()) {
-            entries.append("tree ").append(treeEntry.getKey())
+            entries.append(GitConstants.tree).append(" ").append(treeEntry.getKey())
                     .append(' ').append(treeEntry.getValue()).append(System.lineSeparator());
         }
         content = entries.toString();
@@ -29,7 +32,7 @@ public class Tree extends GitObject {
     }
 
     public boolean isEmpty() {
-        return (blobsNameToSha.isEmpty() && treesNameToSha.isEmpty());
+        return blobsNameToSha.isEmpty() && treesNameToSha.isEmpty();
     }
 
     public void removeBlobByName(String name) {

@@ -11,6 +11,8 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
 public class GitFileSystemManager {
     private final GitObjectManager objectManager;
     private final GitPathService pathService;
@@ -34,7 +36,7 @@ public class GitFileSystemManager {
         var file = new File(filePath.toString());
         try {
             Files.createDirectories(file.getParentFile().toPath());
-            Files.copy(pathService.getPathToBlobBySha(fileEntry.getValue()), filePath);
+            Files.copy(pathService.getPathToBlobBySha(fileEntry.getValue()), filePath, REPLACE_EXISTING);
         } catch (IOException e) {
             throw new GitException("Exception while updating working tree");
         }
@@ -59,17 +61,17 @@ public class GitFileSystemManager {
     }
 
     private void updateWorkingTreeByCommit(Commit commit) throws GitException {
+        var filesInIndex = statusManager.getAllFilesFromTree(index.getRoot(), GitConstants.EMPTY);
         try {
-            var directoryPaths = Files.list(
-                    pathService.getPathToGitRepository()).collect(Collectors.toList());
-            for (var file : directoryPaths) {
-                if (pathService.fileBelongsToGitFolder(file)) {
-                    continue;
-                }
-                if (Files.isDirectory(file)) {
-                    FileUtils.deleteDirectory(new File(file.toString()));
-                } else {
-                    Files.delete(file);
+            for (var file : filesInIndex.keySet()) {
+                Files.delete(pathService.getFullPath(file));
+            }
+            var directoryPaths = Files.walk(pathService.getPathToGitRepository()).collect(Collectors.toList());
+            for (var entry : directoryPaths) {
+                var file = new File(entry.toString());
+                var list = file.list();
+                if (Files.isDirectory(entry) && list != null && list.length == 0) {
+                    FileUtils.deleteDirectory(file);
                 }
             }
         } catch (IOException e) {

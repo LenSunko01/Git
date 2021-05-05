@@ -15,22 +15,12 @@ public class ResetCommand extends Command {
 
     @Override
     public void execute() throws GitException {
-        if (revision.isHeadArgument()) {
-            executeHeadArgument(revision.getCount());
-            writer.formattedOutput("Reset completed successfully");
-            return;
+        var sha = revision.getCommitSha();
+        if (sha.isEmpty()) {
+            throw new GitException("Unknown revision");
         }
-        if (revision.isBranchName()) {
-            executeBranchNameArgument(revision.getArgument());
-            writer.formattedOutput("Reset completed successfully");
-            return;
-        }
-        if (revision.isCommitSha()) {
-            executeCommitShaArgument(revision.getArgument());
-            writer.formattedOutput("Reset completed successfully");
-            return;
-        }
-        throw new GitException("Unknown revision");
+        executeCommitShaArgument(sha);
+        writer.formattedOutput("Reset completed successfully");
     }
 
     private void executeCommitShaArgument(String commitSha) throws GitException {
@@ -41,20 +31,5 @@ public class ResetCommand extends Command {
         } else {
             fileUtils.writeToFile(Paths.get(objectManager.getHeadBranchRelativePath()), commitSha);
         }
-    }
-
-    private void executeBranchNameArgument(String branchName) throws GitException {
-        var path = Paths.get(pathService.getPathToHeadsFolder() + File.separator + branchName);
-        var commitSha = fileUtils.readFromFile(path);
-        executeCommitShaArgument(commitSha);
-    }
-
-    private void executeHeadArgument(int count) throws GitException {
-        var currentCommitSha = objectManager.getHeadCommitSha();
-        if (currentCommitSha.isEmpty()) {
-            return;
-        }
-        var commit = commitHistoryService.getParentCommit(currentCommitSha, count);
-        executeCommitShaArgument(commit.getSha());
     }
 }

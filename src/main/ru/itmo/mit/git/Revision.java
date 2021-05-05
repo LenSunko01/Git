@@ -1,10 +1,11 @@
 package ru.itmo.mit.git;
 
-import ru.itmo.mit.git.context.Context;
+import ru.itmo.mit.git.context.*;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 public class Revision {
     private String argument = "";
@@ -12,18 +13,49 @@ public class Revision {
     private boolean isBranchName = false;
     private boolean isHeadArgument = false;
     private int count = 0;
+    private Context context;
+    private GitObjectManager objectManager;
+    private GitPrettyPrinter writer;
+    private GitCommitHistoryService commitHistoryService;
+    private GitPathService pathService;
+    private GitFileUtils fileUtils;
+    private String commitSha = "";
 
-    public Revision(Context context, String revision) {
+    private void calculateHeadArgument() throws GitException {
+        var currentCommitSha = objectManager.getHeadCommitSha();
+        if (currentCommitSha.isEmpty()) {
+            commitSha = "";
+            return;
+        }
+        var commit = commitHistoryService.getParentCommit(currentCommitSha, count);
+        commitSha = commit.getSha();
+    }
+
+    private void calculateCommitShaArgument(String sha) {
+        commitSha = sha;
+    }
+
+    private void calculateBranchNameArgument(String branchName) throws GitException {
+        var path = Paths.get(pathService.getPathToHeadsFolder() + File.separator + branchName);
+        commitSha = fileUtils.readFromFile(path);
+    }
+
+    public Revision(Context context, String revision) throws GitException {
         if (revision == null) {
             return;
         }
+        this.context = context;
+        objectManager = context.getObjectManager();
+        writer = context.getWriter();
+        commitHistoryService = context.getCommitHistoryService();
+        pathService = context.getPathService();
+        fileUtils = context.getFileUtils();
         argument = revision;
         if (revision.startsWith(GitConstants.revisionHeadPrefix)) {
             try {
                 var numberParsed = Integer.parseInt(revision.substring(GitConstants.revisionHeadPrefix.length()));
                 isHeadArgument = true;
                 count = numberParsed;
-                return;
             } catch (NumberFormatException e) {
                 isHeadArgument = false;
             }
@@ -32,12 +64,22 @@ public class Revision {
         var path = Paths.get(pathService.getPathToHeadsFolder() + File.separator + revision);
         if (Files.exists(path)) {
             isBranchName = true;
-            return;
         }
-        path = Paths.get(pathService.getPathToCommitsFolder() + File.separator
-                + revision.substring(0, 2) + File.separator + revision);
+        path = GitObjectManager.getFullPathToFileBySha(pathService.getPathToCommitsFolder(), revision);
         if (Files.exists(path)) {
             isCommitSha = true;
+        }
+        if (!isCommitSha && !isBranchName && !isHeadArgument) {
+            throw new GitException("Unknown revision");
+        }
+        if (isCommitSha) {
+            calculateCommitShaArgument(revision);
+        }
+        if (isBranchName) {
+            calculateBranchNameArgument(revision);
+        }
+        if (isHeadArgument) {
+            calculateHeadArgument();
         }
     }
 
@@ -60,6 +102,8 @@ public class Revision {
     public String getArgument() {
         return argument;
     }
+
+    public String getCommitSha() { return commitSha; }
 
     public static Revision parseRevision(Context context, String revision) throws GitException {
         var result = new Revision(context, revision);

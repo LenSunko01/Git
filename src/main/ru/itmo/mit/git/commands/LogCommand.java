@@ -27,21 +27,7 @@ public class LogCommand extends Command {
             writer.formattedOutputLog(new ArrayList<>());
             return;
         }
-        var commit = commitHistoryService.getParentCommit(currentCommitSha, count);
-        writer.formattedOutputLog(commitHistoryService.getCommitHistoryInclusive(commit.getSha()));
-    }
-
-    private void executeCommitShaArgument(String sha) throws GitException {
-        writer.formattedOutputLog(commitHistoryService.getCommitHistoryInclusive(sha));
-    }
-
-    private void executeBranchNameArgument(String branchName) throws GitException {
-        var path = Paths.get(pathService.getPathToHeadsFolder() + File.separator + branchName);
-        var commitSha = fileUtils.readFromFile(path);
-        if (commitSha.isEmpty()) {
-            return;
-        }
-        writer.formattedOutputLog(commitHistoryService.getCommitHistoryInclusive(commitSha));
+        writer.formattedOutputLog(commitHistoryService.getCommitHistoryInclusive(currentCommitSha));
     }
 
     @Override
@@ -50,18 +36,11 @@ public class LogCommand extends Command {
             executeHeadArgument(0);
             return;
         }
-        if (revision.isHeadArgument()) {
-            executeHeadArgument(revision.getCount());
+        var sha = revision.getCommitSha();
+        if (sha.isEmpty()) {
+            writer.formattedOutputLog(new ArrayList<>());
             return;
         }
-        if (revision.isBranchName()) {
-            executeBranchNameArgument(revision.getArgument());
-            return;
-        }
-        if (revision.isCommitSha()) {
-            executeCommitShaArgument(revision.getArgument());
-            return;
-        }
-        throw new GitException("Unknown revision");
+        writer.formattedOutputLog(commitHistoryService.getCommitHistoryInclusive(sha));
     }
 }

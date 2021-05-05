@@ -153,4 +153,8 @@ public class GitPrettyPrinter {
         }
         outputStream.println(branchString);
     }
+
+    public void output(String s) {
+        outputStream.println(s);
+    }
 }
