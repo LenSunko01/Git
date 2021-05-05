@@ -14,7 +14,7 @@ public class Main {
             git.runCommand(argsList.get(1), argsList.subList(2, argsList.size()));
         } catch (GitException e) {
             System.out.println("An error occurred while executing git command.");
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 }

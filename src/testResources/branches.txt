@@ -19,7 +19,7 @@ Command: add file2.txt
 Git: Files added successfully
 ----------------------------
 Command: commit file2.txt
-Git: New commit 1fe93c6b61a378b33557b457fa068de2b9bc1c16 at DATE TIME
+Git: New commit 8c0c89a9c1f825d9451b3737760fb674e689f7d6 at DATE TIME
 ----------------------------
 Command: status
 -*-*--*---*----*-----Status-----*----*---*--*-*-
@@ -29,7 +29,7 @@ Everything up to date
 ----------------------------
 Command: log
 -*-*--*---*----*------Log------*----*---*--*-*-
-* 1fe93c6b61a378b33557b457fa068de2b9bc1c16 DATE TIME file2.txt
+* 8c0c89a9c1f825d9451b3737760fb674e689f7d6 DATE TIME file2.txt
 * 698278d60214460e6d1fa2876aa646a66537ae1b DATE TIME file1.txt
 -*-*--*---*----*------Log------*----*---*--*-*-
 ----------------------------
@@ -62,7 +62,7 @@ Command: add file3.txt
 Git: Files added successfully
 ----------------------------
 Command: commit file3.txt
-Git: New commit 709382e196edd42b325ef07e7354219f008d887a at DATE TIME
+Git: New commit bc66dd9f0dcf0da1e47968892dc4ef1edb084f79 at DATE TIME
 ----------------------------
 Command: status
 -*-*--*---*----*-----Status-----*----*---*--*-*-
@@ -72,7 +72,7 @@ Everything up to date
 ----------------------------
 Command: log
 -*-*--*---*----*------Log------*----*---*--*-*-
-* 709382e196edd42b325ef07e7354219f008d887a DATE TIME file3.txt
+* bc66dd9f0dcf0da1e47968892dc4ef1edb084f79 DATE TIME file3.txt
 * 698278d60214460e6d1fa2876aa646a66537ae1b DATE TIME file1.txt
 -*-*--*---*----*------Log------*----*---*--*-*-
 ----------------------------
@@ -87,6 +87,6 @@ Everything up to date
 ----------------------------
 Command: log
 -*-*--*---*----*------Log------*----*---*--*-*-
-* 1fe93c6b61a378b33557b457fa068de2b9bc1c16 DATE TIME file2.txt
+* 8c0c89a9c1f825d9451b3737760fb674e689f7d6 DATE TIME file2.txt
 * 698278d60214460e6d1fa2876aa646a66537ae1b DATE TIME file1.txt
 -*-*--*---*----*------Log------*----*---*--*-*-

@@ -31,7 +31,7 @@ Files staged for commit:
 -*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: commit First commit
-Git: New commit 50be63293325df91479fb83d8c38ff3eb37e5713 at DATE TIME
+Git: New commit 9d9537d88dd5b2548125ef932e7f6571af51c049 at DATE TIME
 ----------------------------
 Command: status
 -*-*--*---*----*-----Status-----*----*---*--*-*-
@@ -41,7 +41,7 @@ Everything up to date
 ----------------------------
 Command: log
 -*-*--*---*----*------Log------*----*---*--*-*-
-* 50be63293325df91479fb83d8c38ff3eb37e5713 DATE TIME First commit
+* 9d9537d88dd5b2548125ef932e7f6571af51c049 DATE TIME First commit
 -*-*--*---*----*------Log------*----*---*--*-*-
 ----------------------------
 Create directory 'Directory1/Directory3'
@@ -67,7 +67,7 @@ Files staged for commit:
 -*-*--*---*----*-----Status-----*----*---*--*-*-
 ----------------------------
 Command: commit Second commit
-Git: New commit 2e7ce445c78e16f6e0711fc1e4c6088df5445d8e at DATE TIME
+Git: New commit ea23ac29ee6e9e99af53d457078670120b1a74d4 at DATE TIME
 ----------------------------
 Create file 'file.txt' with content 'bcd'
 ----------------------------
@@ -82,11 +82,11 @@ Command: add file.txt
 Git: Files added successfully
 ----------------------------
 Command: commit Third commit
-Git: New commit 77af37c1c72141bf81befb738b80fcdb9e71d4bf at DATE TIME
+Git: New commit e97bdc8dc3c776b8c0f93cbbc058564d5c905524 at DATE TIME
 ----------------------------
 Command: log
 -*-*--*---*----*------Log------*----*---*--*-*-
-* 77af37c1c72141bf81befb738b80fcdb9e71d4bf DATE TIME Third commit
-* 2e7ce445c78e16f6e0711fc1e4c6088df5445d8e DATE TIME Second commit
-* 50be63293325df91479fb83d8c38ff3eb37e5713 DATE TIME First commit
+* e97bdc8dc3c776b8c0f93cbbc058564d5c905524 DATE TIME Third commit
+* ea23ac29ee6e9e99af53d457078670120b1a74d4 DATE TIME Second commit
+* 9d9537d88dd5b2548125ef932e7f6571af51c049 DATE TIME First commit
 -*-*--*---*----*------Log------*----*---*--*-*-

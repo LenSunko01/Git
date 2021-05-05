@@ -271,11 +271,11 @@ public class GitTest extends AbstractGitTest {
     public void testResetCommitHash() throws Exception {
         createCommitHistory();
         log();
-        resetCommitHash("d4d1970bff6309f9493f75773ea21e68b3878707");
+        resetCommitHash("f4383f9d2e412b65f3cc297bc432182e2f5889e8");
         status();
         fileContent("lastFile.txt");
         fileContent("first.txt");
-        resetCommitHash("023640779f4c4320aa106dcdcb9344cffb85b5bc");
+        resetCommitHash("ac4e74c80dae9effbfc159f59554aac5e8e4ca45");
         status();
         verifyFileDoesNotExist("lastFile.txt");
         fileContent("first.txt");
@@ -321,8 +321,8 @@ public class GitTest extends AbstractGitTest {
     public void testLogDifferentArguments() throws Exception {
         createCommitHistory();
         log();
-        logHashCommit("023640779f4c4320aa106dcdcb9344cffb85b5bc");
-        logHashCommit("e5348fe86b33da7efe04c7dab5ca629fbe586e0d");
+        logHashCommit("ac4e74c80dae9effbfc159f59554aac5e8e4ca45");
+        logHashCommit("d64f11b451192ae897dd8673d8294f4dd3f2b180");
         logHead(1);
         logHead(3);
         logHead(0);
@@ -336,16 +336,16 @@ public class GitTest extends AbstractGitTest {
         createCommitHistory();
         log();
         status();
-        checkoutCommitHash("d4d1970bff6309f9493f75773ea21e68b3878707");
+        checkoutCommitHash("f4383f9d2e412b65f3cc297bc432182e2f5889e8");
         status();
         fileContent("lastFile.txt");
         fileContent("first.txt");
-        checkoutCommitHash("023640779f4c4320aa106dcdcb9344cffb85b5bc");
+        checkoutCommitHash("ac4e74c80dae9effbfc159f59554aac5e8e4ca45");
         verifyFileDoesNotExist("lastFile.txt");
         fileContent("first.txt");
         fileContent("Directory1/second.txt");
         status();
-        checkoutCommitHash("af7673250c3ca59d8c28a10c7f71258ba0f34cad");
+        checkoutCommitHash("f2b1464c935d73dea9c51029cbc952480b6d6675");
         status();
         fileContent("first.txt");
         verifyFileDoesNotExist("lastFile.txt");

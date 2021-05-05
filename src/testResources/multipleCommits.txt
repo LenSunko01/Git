@@ -49,7 +49,7 @@ Command: add file2.txt
 Git: Files added successfully
 ----------------------------
 Command: commit Add file2.txt
-Git: New commit 0e65a2c5de2c6bd6e1f5f296d5566d5d5326cf97 at DATE TIME
+Git: New commit 2ae2d182be440a7184f3b40553634583b2a1ff65 at DATE TIME
 ----------------------------
 Command: status
 -*-*--*---*----*-----Status-----*----*---*--*-*-
@@ -59,6 +59,6 @@ Everything up to date
 ----------------------------
 Command: log
 -*-*--*---*----*------Log------*----*---*--*-*-
-* 0e65a2c5de2c6bd6e1f5f296d5566d5d5326cf97 DATE TIME Add file2.txt
+* 2ae2d182be440a7184f3b40553634583b2a1ff65 DATE TIME Add file2.txt
 * 7d731d66d70c02b4cf8981876425f2a8c06c0349 DATE TIME Add file1.txt
 -*-*--*---*----*------Log------*----*---*--*-*-

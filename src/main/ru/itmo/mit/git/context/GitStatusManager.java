@@ -117,20 +117,20 @@ public class GitStatusManager {
     public HashMap<String, String> getAllFilesFromTree(Tree root, String currentPath) throws GitException {
         var fileToSha = new HashMap<String, String>();
 
-        for (var blob : root.getBlobsShaToName().entrySet()) {
+        for (var blob : root.getBlobsNameToSha().entrySet()) {
             if (!currentPath.equals(GitConstants.EMPTY)) {
-                fileToSha.put(currentPath + File.separator + blob.getValue(), blob.getKey());
+                fileToSha.put(currentPath + File.separator + blob.getKey(), blob.getValue());
             } else {
-                fileToSha.put(blob.getValue(), blob.getKey());
+                fileToSha.put(blob.getKey(), blob.getValue());
             }
         }
-        for (var tree : root.getTreesShaToName().entrySet()) {
-            var subTree = objectManager.getTreeBySha(tree.getKey());
+        for (var tree : root.getTreesNameToSha().entrySet()) {
+            var subTree = objectManager.getTreeBySha(tree.getValue());
             HashMap<String, String> mapFromSubTree;
             if (!currentPath.equals(GitConstants.EMPTY)) {
-                mapFromSubTree = getAllFilesFromTree(subTree, currentPath + File.separator + tree.getValue());
+                mapFromSubTree = getAllFilesFromTree(subTree, currentPath + File.separator + tree.getKey());
             } else {
-                mapFromSubTree = getAllFilesFromTree(subTree, tree.getValue());
+                mapFromSubTree = getAllFilesFromTree(subTree, tree.getKey());
             }
             fileToSha.putAll(mapFromSubTree);
         }
