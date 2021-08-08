@@ -1,59 +1,32 @@
 # Git
-
-## Требования
-
-Реализовать систему контроля версий и CLI (command line interface) к ней со следующими возможностями (20 баллов):
-
-* `init` -- инициализация репозитория
-* `add <files>` -- добавление файла
-* `rm <files>` -- файл удаляется из репозитория, физически остается
-* `status` -- измененные/удаленные/не добавленные файлы
-* `commit <message>` с проставлением даты и времени
-* `reset <to_revision>`. Поведение `reset` совпадает с `git reset --hard`
-* `log [from_revision]`
+This is a VCS with CLI which can be used for storing different versions of text files similar to GIT. 
+## Set-up
+How to launch the console application:
+1. Put the script gitCli.sh into the folder which will later become a git-repository
+2. Change path in gitCli.sh from /home/mario/Desktop/tmp/java-1-hse-2021/ to your project directory path
+3. Launch application from the command line: `./gitCli.sh init`
+`./gitCli.sh add file1.txt file2.txt`
+## Usage
+This vcs supports following commands:
+* `help` -- list all commands
+* `init` -- initiate a new repository
+* `add <files>` -- add individual file or collection of files
+* `rm <files>` -- remove individual file or collection of files from the repository
+* `status` -- show status of files (e.g. modified/removed/added)
+* `commit <message>` -- make a new commit with message and current date and time
+* `reset <to_revision>` -- similar to `git reset --hard`
+* `log [from_revision]`-- show history from the revision
 * `checkout <revision>`
-    * Возможные значения `revision`:
-        * `commit hash` -- хеш коммита
-        * `master` -- вернуть ветку в исходное состояние
-        * `HEAD~N`, где `N` -- неотрицательное целое число. `HEAD~N` означает _N-й коммит перед HEAD (`HEAD~0 == HEAD`)
-* `checkout -- <files>` -- сбрасывает изменения в файлах
+    * Possible values of `revision`:
+        * `commit hash` -- hash of the commit
+        * `master` -- branch name
+        * `HEAD~N`, where `N` is a non-negative number. `HEAD~N` gets Nth commit before HEAD (`HEAD~0 == HEAD`)
+* `checkout -- <files>` -- reset all changes in files
+* `branch-create <branch>` -- create a new branch called `<branch>`
+* `branch-remove <branch>` -- delete the branch called `<branch>`
+* `show-branches` -- show all branches
 
-Дополнительные команды (+5 дополнительных баллов):
-
-* `branch-create <branch>` -- создать ветку с именем `<branch>`
-* `branch-remove <branch>` -- удалить ветку `<branch>`
-* `show-branches` -- показать все имеющиеся ветки
-* `merge <branch>` -- слить ветку `<branch>` в текущую
-
-## Асимптотика
-
-На все команды есть ограничения на время работы:
-* Главное требование — не O(n), где n — число всех коммитов в текущей ветке
-* Для reset, log и checkout максимальная асимптотика — количество коммитов между текущим и указанным
-* Для остальных оптимальным вариантом будет O(1), но можно больше.
-
-## Примечания
-
-* `<smth>` означает, что передаваемые данные обязательны
-* `[smth]` означает, что передаваемые данные опциональны
-* разрешается использование любых вспомогательных библиотек (кроме тех библиотек, что предоставляют функциональность системы контроля версий)
-    * для реализации CLI интерфейса настоятельно рекомендуется пользоваться библиотеками. Например, [CLI commons](http://commons.apache.org/proper/commons-cli/), которая уже подключена в зависимости проекта (но можно и другой)
-* достаточно поддержать версионирование только текстовых файлов
-* для каждой ревизии __НЕ__ должна храниться полная копия репозитория
-
-## Тесты
-
-В репозитории присутствует интерфейс [GitCli](src/java/ru/itmo/mit/git/GitCli), который нужен только для того, чтобы связать ваш git с готовой тестовой инфраструктурой, которая представлена классом [AbstractGitTest](test/java/ru/itmo/mit/git/AbstractGitTest). В этом классе представлен набор различных команд, для создания различных сценариев использования вашего приложения (ко всем командам в коде есть комментарии). В [GitTest](test/java/ru/itmo/mit/git/GitTest) представлен пример описания тестов: в одном тесте вы описываете последовательность команд, которые могут манипулировать с файлами или вызывать команды git'а. При запуске тест выведет в консоль весь `output` вашего приложения.
-
-У `GitTest` есть наследник [TestDataGitTest](test/java/ru/itmo/mit/git/TestDataGitTest), который отличается от первого режимом исполнения. `TestDataGitTest` не выводит в консоль вывод приложения. Вместо этого он перехватывает его и сравнивает с expected выводом, который записан в соответсвующем файле в директории [resources](src/resources) (обратите внимание на вызовы вида `check("someFile.txt")` в тестах).
-
-**Важно:** уже представленные в `resources` тесты показывают лишь **пример** того, как может выглядеть output вашего приложения. Вы вправе менять тесты по собственному усмотрению и не обязаны соблюдать формат, который уже описан в тестах.
-
-Расширяйте и меняйте код `AbstractGitTest`, если вам это потребуется.
-
-Написание своих тест-кейсов приветствуется.
-
-## Дедлайн
-
-- Мягкий дедлайн: **.**.2020, 23:59
-- Жёсткий дедлайн: 10.05.2021, 23:59
+## Note
+* `<smth>` means that arguments are required
+* `[smth]` means that arguments are optional
+* The full copy of repository IS NOT stored for each revision, so this VCS does not have unnecessary memory usage
